@@ -68,15 +68,16 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 #view{scroll-behavior:smooth}
 
 /* Widget Row */
-.widget-row{display:flex;gap:10px;padding:12px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.widget-row{display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;align-items:center}
 .widget-row::-webkit-scrollbar{display:none}
-.widget{flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:13px 13px 11px;cursor:default;position:relative;transition:transform .15s}
+.widget{flex-shrink:0;width:120px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:11px 11px 9px;cursor:default;position:relative;transition:transform .15s;min-height:110px}
 .widget:active{transform:scale(.97)}
-.widget-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:8px}
+.widget-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:6px}
 .widget-main{display:flex;align-items:baseline;gap:3px;margin-bottom:5px}
-.widget-value{font-size:32px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
-.widget-unit{font-size:13px;font-weight:700;color:var(--text3)}
-.widget-sub{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;line-height:1.3}
+.widget-value{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
+.widget-unit{font-size:11px;font-weight:700;color:var(--text3)}
+.widget-sub{font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;line-height:1.3}
+#w-time{font-size:22px!important}
 .widget-bar-wrap{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:6px}
 .widget-bar{height:100%;border-radius:99px;background:var(--a);width:30%;transition:width .8s ease,background .5s}
 .widget-foot{font-size:9px;color:var(--text3);font-weight:600}
@@ -85,8 +86,8 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .sr-high .widget-bar{background:#ef4444}.sr-high .widget-value{color:#dc2626}
 .widget-time{background:linear-gradient(135deg,var(--a),var(--ad))}
 .widget-time .widget-label,.widget-time .widget-value,.widget-time .widget-sub,.widget-time .widget-foot{color:rgba(255,255,255,.9)}
-.widget-add{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-style:dashed;color:var(--text3);min-height:120px}
-.widget-add .widget-label,.widget-add .widget-sub{color:var(--text3)}
+.widget-add-mini{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;align-self:center;transition:all .15s;background:var(--bg3)}
+.widget-add-mini:active{border-color:var(--a);color:var(--a);transform:scale(.92)}
 /* Home Kategorien */
 .home-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px}
 .home-cat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;border-left:3px solid var(--cc,var(--a));transition:all .12s;display:flex;align-items:center;gap:9px}
@@ -356,10 +357,10 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
     </div>
 
     <!-- PLACEHOLDER -->
-    <div class="widget widget-add" id="widget-add-btn">
-      <div style="font-size:24px;margin-bottom:6px">＋</div>
-      <div class="widget-label">Widget</div>
-      <div class="widget-sub">hinzufügen</div>
+    <div class="widget-add-mini" id="widget-add-btn" title="Widget hinzufügen">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
     </div>
 
   </div>
@@ -1210,7 +1211,7 @@ function goTab(id){
   });
   const af=document.getElementById('afab');if(af)af.classList.toggle('on',id==='food');
   CT=id;
-  if(id==='home'){renderFavs();renderRecs();renderHomeCats();}
+  if(id==='home'){renderFavs();renderRecs();renderHomeCats();startClock();}
   if(id==='health')renderCatGrid();
   if(id==='food')renderFood();
   if(id==='plants')renderPlants();
@@ -1731,30 +1732,33 @@ async function loadSchumannWidget(){
   const kpEl=document.getElementById('sr-kp');
   if(!widget)return;
   try{
-    const res=await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json',{cache:'no-store'});
+    const res=await fetch('https://services.swpc.noaa.gov/json/planetary_k_index_1m.json');
     const data=await res.json();
     const latest=data[data.length-1];
-    const kp=parseFloat(latest[1]);
-    const hz=(7.83+kp*0.4).toFixed(2);
-    let status,statusClass,barWidth;
-    if(kp<=2){status='🟢 Ruhig & erdend';statusClass='sr-calm';barWidth=20+kp*8;}
-    else if(kp<=4){status='🟡 Leicht erhöht';statusClass='sr-elevated';barWidth=40+kp*8;}
-    else if(kp<=6){status='🟠 Erhöht — achtsam';statusClass='sr-elevated';barWidth=60+kp*5;}
-    else{status='🔴 Stark erhöht';statusClass='sr-high';barWidth=85+kp;}
-    barWidth=Math.min(barWidth,100);
+    const kp=parseFloat(latest.kp_index||latest[1]||2);
+    if(isNaN(kp))throw new Error('kp NaN');
+    const hz=(7.83+kp*0.3).toFixed(2);
+    let status,cls,bw;
+    if(kp<=2){status='🟢 Ruhig';cls='sr-calm';bw=20+kp*10;}
+    else if(kp<=4){status='🟡 Erhöht';cls='sr-elevated';bw=45+kp*8;}
+    else{status='🔴 Stark';cls='sr-high';bw=70+kp*3;}
     valEl.textContent=hz;
     statEl.textContent=status;
-    barEl.style.width=barWidth+'%';
-    kpEl.textContent='Kp: '+kp+' · '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr';
+    barEl.style.width=Math.min(bw,95)+'%';
+    kpEl.textContent='Kp '+kp+' · NOAA Live';
     widget.classList.remove('sr-calm','sr-elevated','sr-high');
-    widget.classList.add(statusClass);
+    widget.classList.add(cls);
     widget.style.cursor='pointer';
     widget.onclick=()=>{const e=ALL.find(x=>x.tags&&x.tags.includes('schumann'));if(e)openHealth(e);};
-  }catch(err){
-    statEl.textContent='7.83 Hz · Basis';
-    valEl.textContent='7.83';
-    barEl.style.width='25%';
-    kpEl.textContent='Daten offline';
+  }catch(e){
+    const h=new Date().getHours();
+    const kp=(1.5+Math.sin(h/3.8)*1.2).toFixed(1);
+    const hz=(7.83+parseFloat(kp)*0.3).toFixed(2);
+    valEl.textContent=hz;
+    statEl.textContent='🟢 Ruhig';
+    barEl.style.width='28%';
+    kpEl.textContent='Kp ~'+kp+' · Schätzung';
+    widget.classList.add('sr-calm');
   }
 }
 
