@@ -1054,6 +1054,7 @@ const FG=[
     {n:'Harissa',e:'🌶️',time:15,zutaten:['Rote Chilis','Knoblauch','Kreuzkümmel','Koriander','Olivenöl','Zitrone','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=harissa+selbst+machen'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=harissa'}]},
   ]},
 ];
+FG.forEach(g=>{g.items.sort((a,b)=>(a.n||'').localeCompare((b.n||''),'de',{sensitivity:'base'}));});
 
 // MULTI-API KI
 const APIS=[
