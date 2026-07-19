@@ -330,6 +330,7 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
     <div class="ch-ico" id="ch-ico"></div>
     <span class="ch-ttl" id="ch-ttl"></span>
     <span class="ch-cnt" id="ch-cnt"></span>
+    <button id="btn-cat-add" style="background:var(--a);color:#fff;border:none;border-radius:99px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;margin-left:auto"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Hinzufügen</button>
   </div>
   <div id="cat-list"></div>
 </div>
@@ -463,6 +464,42 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
   <button class="btn-p" id="note-save">Notiz speichern</button>
 </div></div>
 
+<div class="mbg" id="m-add-custom"><div class="modal" style="max-height:95vh;overflow-y:auto">
+  <div class="mh"></div>
+  <button class="mcl" id="mc-add-custom">Schließen</button>
+  <div id="ac-step1">
+    <div class="modal-t">✨ Inhalt hinzufügen</div>
+    <div style="background:var(--ag);border-radius:12px;padding:13px;border:1px solid var(--a);margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--a);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🌱 Planty klassifiziert automatisch</div>
+      <textarea id="ac-quick-input" style="width:100%;border:none;background:transparent;color:var(--text);font-size:13px;resize:none;outline:none;min-height:60px;line-height:1.6" placeholder="Beschreibe deinen Inhalt kurz...&#10;z.B. 'Schwarzkümmelöl hilft bei Allergien und Immunsystem'&#10;z.B. 'Rezept: Linsensuppe mit Kokosmilch'"></textarea>
+      <button id="ac-ai-detect" style="width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px">🌱 Planty fragen — Kategorie erkennen</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:10px">— oder direkt wählen —</div>
+    <div id="ac-cat-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
+  </div>
+  <div id="ac-step2" style="display:none">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <button id="ac-back" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--text2);cursor:pointer">← Zurück</button>
+      <div class="modal-t" id="ac-form-title" style="margin-bottom:0;flex:1"></div>
+    </div>
+    <div id="ac-fields"></div>
+    <div style="background:var(--bg3);border-radius:11px;padding:12px;border:1px solid var(--border);margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Sichtbarkeit</div>
+      <div style="display:flex;gap:8px">
+        <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:2px solid var(--a);background:var(--al);cursor:pointer">
+          <input type="radio" name="ac-scope" value="private" checked style="accent-color:var(--a)">
+          <div><div style="font-size:12px;font-weight:700;color:var(--a)">👤 Nur ich</div><div style="font-size:10px;color:var(--text3)">Nur du siehst das</div></div>
+        </label>
+        <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:2px solid var(--border);background:var(--bg3);cursor:pointer">
+          <input type="radio" name="ac-scope" value="global" style="accent-color:var(--a)">
+          <div><div style="font-size:12px;font-weight:700;color:var(--text2)">🌍 Global</div><div style="font-size:10px;color:var(--text3)">J · H · M sehen es</div></div>
+        </label>
+      </div>
+    </div>
+    <button class="btn-p" id="ac-save">Speichern ✓</button>
+  </div>
+</div></div>
+
 <div class="mbg" id="m-net"><div class="modal">
   <div class="mh"></div><button class="mcl" id="mc-net">Schließen</button>
   <div class="modal-t">🚀 Online stellen</div>
@@ -492,10 +529,152 @@ function togF(id,name,cat){
   sF(f);renderFavs();
 }
 function addR(item){let r=lR().filter(x=>x.id!==item.id);r.unshift(item);if(r.length>12)r=r.slice(0,12);sR(r);}
+function loadGlobalCustom(){try{return JSON.parse(localStorage.getItem('pln_custom_global'))||[];}catch{return[];}}
+function saveGlobalCustom(arr){localStorage.setItem('pln_custom_global',JSON.stringify(arr));}
+function loadPrivateCustom(){try{return JSON.parse(localStorage.getItem('pln_custom_'+CU))||[];}catch{return[];}}
+function savePrivateCustom(arr){localStorage.setItem('pln_custom_'+CU,JSON.stringify(arr));}
+function allCustom(){return[...loadGlobalCustom().map(e=>({...e,_scope:'global'})),...loadPrivateCustom().map(e=>({...e,_scope:'private'}))];}
+function customForCat(catId){return allCustom().filter(e=>e._catId===catId);}
+function getAllEntries(){return[...ALL,...allCustom()];}
 
 // SUPABASE (background)
 let sb=null;
 try{sb=supabase.createClient('https://cuysjgfgdcyfednajnuk.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1eXNqZ2ZnZGN5ZmVkbmFqbnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDk4NTAsImV4cCI6MjEwMDAyNTg1MH0.aR1MOdBnbeVkkF9pFFEjlghgCR7H81CaKWZVsMRni-8');}catch(e){}
+
+// TEMPLATES
+const TEMPLATES={
+  praxis:{name:'Praxisfall',emoji:'🩺',felder:[
+    {id:'titel',label:'Titel / Beschwerde',type:'text',placeholder:'z.B. Rückenschmerzen — unterer Rücken'},
+    {id:'lbl',label:'Label (kurz)',type:'text',placeholder:'z.B. Sofortprotokoll'},
+    {id:'symptome',label:'Symptome & Ursachen',type:'textarea',placeholder:'Was passiert? Warum?\nUrsache 1\nUrsache 2'},
+    {id:'sofort',label:'Sofortmaßnahmen',type:'textarea',placeholder:'→ Was sofort tun?\n→ Schritt 2'},
+    {id:'supplemente',label:'Supplements & Mittel',type:'textarea',placeholder:'• Magnesium 400 mg\n• Omega-3'},
+    {id:'quelle',label:'Quelle / Referenz',type:'text',placeholder:'z.B. Dr. Name · Studie · Buch'},
+    {id:'quelle_url',label:'Quellen-Link (optional)',type:'url',placeholder:'https://...'},
+  ]},
+  naturheilkunde:{name:'Naturheilkunde',emoji:'🌿',felder:[
+    {id:'titel',label:'Name der Methode / Pflanze',type:'text',placeholder:'z.B. Schwarzkümmelöl'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Öl · Tinktur · Methode'},
+    {id:'wirkstoffe',label:'Wirkstoffe',type:'textarea',placeholder:'Thymoquinon · Ätherische Öle · ...'},
+    {id:'wirkung',label:'Wirkung',type:'textarea',placeholder:'• Antibakteriell\n• Immunsystem ↑'},
+    {id:'anwendung',label:'Anwendung & Dosierung',type:'textarea',placeholder:'1 TL täglich · Morgens nüchtern\n...'},
+    {id:'warnung',label:'Warnung / Hinweis',type:'textarea',placeholder:'Nicht bei Schwangerschaft · max. 6 Wochen'},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Quellen-Link',type:'url',placeholder:'https://...'},
+  ]},
+  heilpflanzen:{name:'Heilpflanze',emoji:'🌺',felder:[
+    {id:'titel',label:'Pflanzenname',type:'text',placeholder:'z.B. Schwarzkümmel (Nigella sativa)'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Samen · Öl · Wurzel'},
+    {id:'wirkstoffe',label:'Wirkstoffe',type:'textarea',placeholder:''},
+    {id:'wirkung',label:'Wirkung',type:'textarea',placeholder:''},
+    {id:'anwendung',label:'Anwendung',type:'textarea',placeholder:''},
+    {id:'warnung',label:'⚠️ Warnung',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Quellen-Link',type:'url',placeholder:''},
+  ]},
+  frequenzen:{name:'Frequenz',emoji:'〰️',felder:[
+    {id:'titel',label:'Hz-Wert & Name',type:'text',placeholder:'z.B. 963 Hz — Kronenchakra'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Kronenchakra · Bewusstsein'},
+    {id:'wirkung',label:'Wirkung & Bedeutung',type:'textarea',placeholder:''},
+    {id:'anwendung',label:'Anwendung',type:'textarea',placeholder:'Kopfhörer · täglich X min\nKombination mit...'},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Quellen-Link',type:'url',placeholder:''},
+  ]},
+  naehrstoffe:{name:'Nährstoff / Supplement',emoji:'💊',felder:[
+    {id:'titel',label:'Name',type:'text',placeholder:'z.B. Berberin'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Pflanzlicher Wirkstoff'},
+    {id:'wirkstoffe',label:'Wirkstoffe',type:'textarea',placeholder:''},
+    {id:'wirkung',label:'Wirkung (klinisch)',type:'textarea',placeholder:''},
+    {id:'dosierung',label:'Dosierung & Einnahme',type:'textarea',placeholder:'500 mg 3×/Tag\nMit Essen einnehmen'},
+    {id:'mangel',label:'Mangel-Symptome',type:'textarea',placeholder:''},
+    {id:'quellen_food',label:'Nahrungsquellen',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Quellen-Link',type:'url',placeholder:''},
+  ]},
+  zahnpflege:{name:'Zahnpflege-Tipp',emoji:'🦷',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Routine · Mittel'},
+    {id:'wirkung',label:'Wirkung',type:'textarea',placeholder:''},
+    {id:'anwendung',label:'Anwendung',type:'textarea',placeholder:''},
+    {id:'warnung',label:'Hinweis',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  hormone:{name:'Hormon-Thema',emoji:'🌸',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Östrogen · Testosteron'},
+    {id:'symptome',label:'Symptome / Indikation',type:'textarea',placeholder:''},
+    {id:'protokoll',label:'Protokoll',type:'textarea',placeholder:''},
+    {id:'warnung',label:'Hinweis',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  energetisch:{name:'Energetisches Thema',emoji:'⚡',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Erdung · HRV · Biohacking'},
+    {id:'wirkung',label:'Wirkung / Bedeutung',type:'textarea',placeholder:''},
+    {id:'anwendung',label:'Anwendung / Protokoll',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  entgiftung:{name:'Entgiftungs-Methode',emoji:'🧹',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Schwermetalle · Leber'},
+    {id:'wirkung',label:'Wirkung',type:'textarea',placeholder:''},
+    {id:'protokoll',label:'Protokoll / Anwendung',type:'textarea',placeholder:''},
+    {id:'warnung',label:'⚠️ Warnung',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  kupfer:{name:'Kupfer / Wasser',emoji:'🫗',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:''},
+    {id:'wirkung',label:'Wirkung',type:'textarea',placeholder:''},
+    {id:'anwendung',label:'Anwendung',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  natron:{name:'Natron-Anwendung',emoji:'🧂',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Gesundheit · Haushalt'},
+    {id:'anwendung',label:'Anwendung & Rezept',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  aloe:{name:'Aloe Vera Anwendung',emoji:'🪴',felder:[
+    {id:'titel',label:'Titel',type:'text',placeholder:''},
+    {id:'lbl',label:'Label',type:'text',placeholder:''},
+    {id:'anwendung',label:'Anwendung',type:'textarea',placeholder:''},
+    {id:'warnung',label:'Hinweis',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  laborwerte:{name:'Laborwert',emoji:'🔬',felder:[
+    {id:'titel',label:'Bezeichnung',type:'text',placeholder:'z.B. Ferritin'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Eisenspeicher'},
+    {id:'werte',label:'Referenzwerte (Tabelle)',type:'textarea',placeholder:'Konventionell: > 12 µg/L\nOptimal: 70-150 µg/L'},
+    {id:'bedeutung',label:'Bedeutung & Symptome',type:'textarea',placeholder:''},
+    {id:'optimierung',label:'Optimierung',type:'textarea',placeholder:''},
+    {id:'quelle',label:'Quelle',type:'text',placeholder:''},
+    {id:'quelle_url',label:'Link',type:'url',placeholder:''},
+  ]},
+  krafttiere:{name:'Krafttier',emoji:'🦅',felder:[
+    {id:'titel',label:'Tier & Bedeutung',type:'text',placeholder:'z.B. Pinguin — Gemeinschaft & Anpassung'},
+    {id:'lbl',label:'Label',type:'text',placeholder:'z.B. Gemeinschaft · Ausdauer'},
+    {id:'eigenschaften',label:'Eigenschaften',type:'textarea',placeholder:'• Eigenschaft 1\n• Eigenschaft 2'},
+    {id:'botschaft',label:'Botschaft',type:'textarea',placeholder:'→ Was dir das Tier sagen will'},
+    {id:'wann',label:'Wann erscheint dieses Tier?',type:'textarea',placeholder:'Wenn du... dann...'},
+    {id:'quelle',label:'Tradition / Quelle',type:'text',placeholder:'z.B. Schamanische Tradition · Keltisch'},
+  ]},
+  gerichte:{name:'Gericht',emoji:'🍽️',felder:[
+    {id:'titel',label:'Name des Gerichts',type:'text',placeholder:'z.B. Goldene Kurkuma-Suppe'},
+    {id:'gruppe',label:'Kategorie',type:'select',options:['Tofu-Gerichte','Linsengerichte','Kichererbsen-Gerichte','Kartoffelgerichte','Reisgerichte','Nudelgerichte','Gemüsegerichte','Eintöpfe','Saucen & Beilagen','Eigene']},
+    {id:'time',label:'Zeit (Minuten)',type:'number',placeholder:'30'},
+    {id:'zutaten',label:'Zutaten',type:'textarea',placeholder:'400g Kichererbsen\n2 Karotten\n1 TL Kurkuma\n...'},
+    {id:'zubereitung',label:'Zubereitung',type:'textarea',placeholder:'1. Zwiebeln anbraten\n2. Gemüse dazugeben\n...'},
+    {id:'notizen',label:'Tipps & Notizen',type:'textarea',placeholder:'Schmeckt am nächsten Tag noch besser!'},
+  ]},
+};
 
 // HEALTH DB
 const CATS=[
@@ -1019,9 +1198,30 @@ function openCat(id){
   const cat=CATS.find(c=>c.id===id);if(!cat)return;
   const entries=DB[id]||[];
   const hi=document.getElementById('ch-ico');if(hi){hi.innerHTML=SVGIC(cat.p);hi.style.background=cat.col+'20';hi.style.color=cat.col;}
-  const ht=document.getElementById('ch-ttl');if(ht)ht.textContent=cat.nm;
+  const ht=document.getElementById('ch-ttl');if(ht){ht.textContent=cat.nm;ht.dataset.catid=id;}
   const hc=document.getElementById('ch-cnt');if(hc)hc.textContent=entries.length;
-  const cl=document.getElementById('cat-list');if(cl){cl.innerHTML=entries.map((e,i)=>buildEC(e,'c'+i,[])).join('');bindECHeads(cl);bindECStars(cl);}
+  const cl=document.getElementById('cat-list');
+  if(cl){
+    const custom=customForCat(id);
+    let html='';
+    if(custom.length){
+      html+=custom.map((e,i)=>buildEC(e,'cust'+i,[])+'<div style="text-align:right;padding:0 16px;margin-top:-6px;margin-bottom:6px"><button style="font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer" data-del-id="'+e.id+'" data-del-scope="'+(e._scope||'private')+'">🗑 Löschen</button></div>').join('');
+      html+='<div style="height:4px"></div><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px">Einträge</div>';
+    }
+    html+=entries.map((e,i)=>buildEC(e,id+'_'+i,[])).join('');
+    cl.innerHTML=html;
+    bindECHeads(cl);bindECStars(cl);
+    cl.querySelectorAll('[data-del-id]').forEach(btn=>{
+      btn.addEventListener('click',ev=>{
+        ev.stopPropagation();
+        if(!confirm('Diesen Eintrag löschen?'))return;
+        const sc=btn.dataset.delScope,eid=btn.dataset.delId;
+        if(sc==='global')saveGlobalCustom(loadGlobalCustom().filter(x=>x.id!==eid));
+        else savePrivateCustom(loadPrivateCustom().filter(x=>x.id!==eid));
+        openCat(id);
+      });
+    });
+  }
   goTab('cat');
 }
 
@@ -1202,6 +1402,77 @@ function openPlanty(){
 document.querySelectorAll('.mbg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('on');}));
 
 // BIND ALL
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:calc(var(--nh)+16px);left:50%;transform:translateX(-50%);background:#1a7c35;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:700;z-index:200;transition:opacity .3s;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2)';document.getElementById('shell').appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',2500);
+}
+function buildBodyFromTemplate(catId,data){
+  const lines=[];
+  if(data.symptome)   lines.push('SYMPTOME & URSACHEN:\n'+data.symptome);
+  if(data.wirkstoffe) lines.push('WIRKSTOFFE:\n'+data.wirkstoffe);
+  if(data.wirkung)    lines.push('WIRKUNG:\n'+data.wirkung);
+  if(data.sofort)     lines.push('SOFORTMASSNAHMEN:\n'+data.sofort);
+  if(data.anwendung)  lines.push('ANWENDUNG:\n'+data.anwendung);
+  if(data.dosierung)  lines.push('DOSIERUNG:\n'+data.dosierung);
+  if(data.protokoll)  lines.push('PROTOKOLL:\n'+data.protokoll);
+  if(data.supplemente)lines.push('SUPPLEMENTS:\n'+data.supplemente);
+  if(data.zutaten)    lines.push('ZUTATEN:\n'+data.zutaten);
+  if(data.zubereitung)lines.push('ZUBEREITUNG:\n'+data.zubereitung);
+  if(data.werte)      lines.push('REFERENZWERTE:\n'+data.werte);
+  if(data.bedeutung)  lines.push('BEDEUTUNG:\n'+data.bedeutung);
+  if(data.optimierung)lines.push('OPTIMIERUNG:\n'+data.optimierung);
+  if(data.eigenschaften)lines.push('EIGENSCHAFTEN:\n'+data.eigenschaften);
+  if(data.botschaft)  lines.push('BOTSCHAFT:\n'+data.botschaft);
+  if(data.wann)       lines.push('WANN ERSCHEINT DIESES TIER:\n'+data.wann);
+  if(data.mangel)     lines.push('MANGEL-SYMPTOME:\n'+data.mangel);
+  if(data.quellen_food)lines.push('NAHRUNGSQUELLEN:\n'+data.quellen_food);
+  if(data.warnung)    lines.push('⚠️ HINWEIS:\n'+data.warnung);
+  if(data.notizen)    lines.push('NOTIZEN:\n'+data.notizen);
+  return lines.join('\n\n');
+}
+function buildACCatGrid(){
+  const grid=document.getElementById('ac-cat-grid');if(!grid)return;
+  const cats=[
+    ...CATS.map(c=>({id:c.id,nm:c.nm,emoji:c.emoji||'📋',col:c.col})),
+    {id:'gerichte',nm:'Gericht',emoji:'🍽️',col:'#c2410c'},
+  ];
+  grid.innerHTML=cats.map(c=>'<div class="cat-card" style="--cc:'+c.col+';padding:10px 9px" data-catid="'+c.id+'"><div class="cat-ic" style="background:'+c.col+';color:#fff;font-size:16px;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center">'+c.emoji+'</div><div><div class="cat-nm" style="font-size:11px">'+esc(c.nm)+'</div></div></div>').join('');
+  grid.querySelectorAll('[data-catid]').forEach(card=>{
+    card.addEventListener('click',()=>openACForm(card.dataset.catid));
+  });
+}
+function openACForm(catId,prefill=''){
+  const tpl=TEMPLATES[catId];if(!tpl)return;
+  document.getElementById('ac-step1').style.display='none';
+  document.getElementById('ac-step2').style.display='block';
+  document.getElementById('ac-form-title').textContent=tpl.emoji+' '+tpl.name+' hinzufügen';
+  const fields=document.getElementById('ac-fields');
+  fields.innerHTML=tpl.felder.map(f=>{
+    const id='ac-f-'+f.id;
+    let input='';
+    if(f.type==='textarea') input='<textarea class="fi" id="'+id+'" placeholder="'+(f.placeholder||'')+'"></textarea>';
+    else if(f.type==='select') input='<select class="fi" id="'+id+'">'+f.options.map(o=>'<option>'+o+'</option>').join('')+'</select>';
+    else input='<input class="fi" type="'+f.type+'" id="'+id+'" placeholder="'+(f.placeholder||'')+'">';
+    return '<label class="fl">'+esc(f.label)+(f.id==='titel'?' *':'')+'</label>'+input;
+  }).join('');
+  if(prefill){const el=document.getElementById('ac-f-titel');if(el)el.value=prefill;}
+  document.getElementById('ac-save').dataset.catid=catId;
+}
+function openACModal(catId){
+  buildACCatGrid();
+  document.getElementById('ac-quick-input').value='';
+  if(catId&&TEMPLATES[catId]){
+    document.getElementById('ac-step1').style.display='none';
+    document.getElementById('ac-step2').style.display='block';
+    openACForm(catId);
+  }else{
+    document.getElementById('ac-step1').style.display='block';
+    document.getElementById('ac-step2').style.display='none';
+  }
+  openM('m-add-custom');
+}
 function bindAll(){
   // Recents del
   document.getElementById('rec-del').addEventListener('click',()=>{sR([]);renderRecs();});
@@ -1221,8 +1492,55 @@ function bindAll(){
   document.getElementById('mc-planty').addEventListener('click',()=>closeM('m-planty'));
   document.getElementById('ki-send').addEventListener('click',sendKI);
   document.getElementById('ki-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendKI();});
-  // FAB
-  document.getElementById('afab').addEventListener('click',()=>{document.getElementById('dish-nm').value='';document.getElementById('dish-notes').value='';openM('m-dish');});
+  // FAB → universal add
+  document.getElementById('afab').addEventListener('click',()=>openACModal(null));
+  // Add custom modal
+  document.getElementById('mc-add-custom').addEventListener('click',()=>closeM('m-add-custom'));
+  document.getElementById('ac-back').addEventListener('click',()=>{
+    document.getElementById('ac-step1').style.display='block';
+    document.getElementById('ac-step2').style.display='none';
+  });
+  document.getElementById('ac-ai-detect').addEventListener('click',async function(){
+    const text=document.getElementById('ac-quick-input').value.trim();
+    if(!text){showToast('Bitte zuerst beschreiben!');return;}
+    const api=pickAPI();
+    if(!api){showToast('Kein KI verfügbar — bitte Kategorie manuell wählen');return;}
+    this.textContent='⏳ Planty erkennt...';this.disabled=true;
+    const prompt='Klassifiziere diesen Inhalt in GENAU EINE dieser Kategorien: '+Object.keys(TEMPLATES).join(', ')+'\nInhalt: "'+text+'"\nAntworte NUR mit: kategorieId;Kurztitel (z.B.: naturheilkunde;Schwarzkümmelöl bei Allergien)';
+    try{
+      const res=await fetch(api.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+api.key},body:JSON.stringify({model:api.model,messages:[{role:'user',content:prompt}],max_tokens:50,temperature:0})});
+      const d=await res.json();
+      const answer=(d.choices?.[0]?.message?.content||'').trim();
+      const[catId,title]=answer.split(';').map(s=>s.trim());
+      if(TEMPLATES[catId]){openACForm(catId,title||'');showToast('✅ Erkannt: '+TEMPLATES[catId].name);}
+      else showToast('Nicht erkannt — bitte manuell wählen');
+    }catch{showToast('Fehler — bitte manuell wählen');}
+    this.textContent='🌱 Planty fragen — Kategorie erkennen';this.disabled=false;
+  });
+  document.getElementById('ac-save').addEventListener('click',function(){
+    const catId=this.dataset.catid;
+    const tpl=TEMPLATES[catId];if(!tpl)return;
+    const titelEl=document.getElementById('ac-f-titel');
+    if(titelEl&&!titelEl.value.trim()){showToast('Titel fehlt!');return;}
+    const data={};
+    tpl.felder.forEach(f=>{const el=document.getElementById('ac-f-'+f.id);if(el)data[f.id]=el.value.trim();});
+    const id='custom_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    const entry={id,_catId:catId,_template:catId,_by:CU,_ts:Date.now(),col:CATS.find(c=>c.id===catId)?.col||'#1a7c35',title:data.titel||'Eigener Eintrag',lbl:data.lbl||tpl.name,tags:[catId,CU.toLowerCase()],body:buildBodyFromTemplate(catId,data),...data};
+    if(data.quelle_url)entry.src={nm:data.quelle||'Quelle',url:data.quelle_url};
+    const scope=document.querySelector('input[name="ac-scope"]:checked')?.value||'private';
+    if(scope==='global'){const arr=loadGlobalCustom();arr.unshift(entry);saveGlobalCustom(arr);}
+    else{const arr=loadPrivateCustom();arr.unshift(entry);savePrivateCustom(arr);}
+    closeM('m-add-custom');
+    showToast(scope==='global'?'✅ Gespeichert — sichtbar für alle!':'✅ Gespeichert — nur für dich!');
+    const curCat=document.getElementById('ch-ttl')?.dataset?.catid;
+    if(CT==='cat'&&curCat)openCat(curCat);
+    else if(CT==='health')renderCatGrid();
+  });
+  // + button in cat header
+  document.getElementById('btn-cat-add').addEventListener('click',()=>{
+    const catId=document.getElementById('ch-ttl')?.dataset?.catid;
+    openACModal(catId||null);
+  });
   document.getElementById('mc-dish').addEventListener('click',()=>closeM('m-dish'));
   document.getElementById('dish-save').addEventListener('click',()=>{
     const n=document.getElementById('dish-nm').value.trim();if(!n){alert('Name fehlt.');return;}
