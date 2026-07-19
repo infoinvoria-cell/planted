@@ -574,60 +574,124 @@ DB.laborwerte=[{id:'lb1',col:'#6d28d9',lbl:'Referenz',title:'Optimale Laborwerte
 const ALL=Object.values(DB).flat();
 
 const FG=[
-  {g:'Tofu-Gerichte',    tag:'Tofu',        emoji:'🍱', col:'#dc2626', items:[
-    {n:'Gebratener Tofu Gemüse',e:'🥢'},{n:'Tofu-Tacos',e:'🌮'},{n:'Tofu-Curry',e:'🍛'},
-    {n:'Tofu-Salat Sesam',e:'🥗'},{n:'Tofu-Ramen',e:'🍜'},{n:'Tofu-Bowl Reis',e:'🍱'},
-    {n:'Tofu-Wrap',e:'🌯'},{n:'Tofu-Bolognese',e:'🍝'},{n:'Tofu-Pfanne Brokkoli',e:'🥦'},
-    {n:'Mapo Tofu vegan',e:'🌶️'},{n:'Tofu-Scramble',e:'🍳'},{n:'Tofu Erdnusssauce',e:'🥜'},
-    {n:'Tofu-Spieße',e:'🍢'},{n:'Palak Tofu',e:'🌿'},{n:'Tofu-Gyros',e:'🫓'},
+  {g:'Tofu-Gerichte',tag:'Tofu',emoji:'🍱',col:'#dc2626',items:[
+    {n:'Gebratener Tofu Gemüse',e:'🥢',time:20,zutaten:['Tofu fest','Sojasoße','Sesamöl','Brokkoli','Paprika','Knoblauch','Ingwer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gebratener+tofu+gem%C3%BCse+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=tofu+gem%C3%BCse'}]},
+    {n:'Tofu-Tacos',e:'🌮',time:25,zutaten:['Tofu','Tortillas','Avocado','Mais','Salsa','Limette','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+tacos+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=tofu+tacos'}]},
+    {n:'Tofu-Curry',e:'🍛',time:30,zutaten:['Tofu','Kokosmilch','Currypaste','Zwiebel','Knoblauch','Ingwer','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+curry+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=tofu+curry'}]},
+    {n:'Tofu-Salat Sesam',e:'🥗',time:15,zutaten:['Tofu','Sesam','Sojasoße','Reisessig','Ingwer','Frühlingszwiebeln','Gurke'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+salat+sesam'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=tofu+sesam+salat'}]},
+    {n:'Tofu-Ramen',e:'🍜',time:35,zutaten:['Tofu','Ramen-Nudeln','Miso','Sojasoße','Pak Choi','Pilze','Nori'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+ramen+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=ramen'}]},
+    {n:'Tofu-Bowl Reis',e:'🍱',time:25,zutaten:['Tofu','Reis','Edamame','Karotte','Gurke','Sojasoße','Sesamöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+bowl+reis'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=tofu+bowl'}]},
+    {n:'Tofu-Wrap',e:'🌯',time:20,zutaten:['Tofu','Tortilla','Hummus','Salat','Tomate','Paprika','Limette'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+wrap+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=tofu+wrap'}]},
+    {n:'Tofu-Bolognese',e:'🍝',time:35,zutaten:['Tofu','Nudeln','Dosentomaten','Zwiebel','Knoblauch','Basilikum','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+bolognese'},{nm:'Eat This',url:'https://www.eat-this.org/?s=bolognese+tofu'}]},
+    {n:'Tofu-Pfanne Brokkoli',e:'🥦',time:20,zutaten:['Tofu','Brokkoli','Sojasoße','Knoblauch','Ingwer','Sesamöl','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+pfanne+brokkoli'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=tofu+brokkoli'}]},
+    {n:'Mapo Tofu vegan',e:'🌶️',time:25,zutaten:['Tofu','Doubanjiang','Sojasoße','Knoblauch','Ingwer','Szechuanpfeffer','Frühlingszwiebeln'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=mapo+tofu+vegan'},{nm:'Woks of Life',url:'https://thewoksoflife.com/mapo-tofu/'}]},
+    {n:'Tofu-Scramble',e:'🍳',time:15,zutaten:['Tofu','Kurkuma','Kala Namak','Paprika','Zwiebel','Spinat','Hefeflocken'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+scramble'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=tofu+scramble'}]},
+    {n:'Tofu Erdnusssauce',e:'🥜',time:25,zutaten:['Tofu','Erdnussmus','Sojasoße','Limette','Ingwer','Knoblauch','Kokosmilch'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+erdnuss'},{nm:'Eat This',url:'https://www.eat-this.org/?s=erdnuss+tofu'}]},
+    {n:'Tofu-Spieße',e:'🍢',time:30,zutaten:['Tofu','Paprika','Zucchini','Sojasoße','Knoblauch','Sesamöl','Honig vegan'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+spie%C3%9Fe+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=tofu+spie%C3%9Fe'}]},
+    {n:'Palak Tofu',e:'🌿',time:30,zutaten:['Tofu','Spinat','Tomate','Zwiebel','Knoblauch','Ingwer','Garam Masala'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=palak+tofu'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=palak'}]},
+    {n:'Tofu-Gyros',e:'🫓',time:25,zutaten:['Tofu','Pitabrot','Gyros-Gewürz','Tzatziki vegan','Tomate','Zwiebel','Salat'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tofu+gyros'},{nm:'Eat This',url:'https://www.eat-this.org/?s=tofu+gyros'}]},
   ]},
-  {g:'Linsengerichte',   tag:'Linsen',       emoji:'🫘', col:'#16a34a', items:[
-    {n:'Roter Linseneintopf',e:'🍲'},{n:'Rotes Linsen-Curry',e:'🍛'},{n:'Linsensuppe',e:'🥣'},
-    {n:'Linsen-Tacos',e:'🌮'},{n:'Linsen-Bolognese',e:'🍝'},{n:'Linsensalat Kräuter',e:'🥗'},
-    {n:'Linsen-Bowl Süßkartoffel',e:'🍠'},{n:'Linsen-Burger',e:'🍔'},{n:'Dhal',e:'🫕'},
-    {n:'Mujaddara',e:'🍚'},{n:'Grüne Linsen Spinat',e:'🌿'},{n:'Linsen-Tomaten-Pfanne',e:'🍅'},
+  {g:'Linsengerichte',tag:'Linsen',emoji:'🫘',col:'#16a34a',items:[
+    {n:'Roter Linseneintopf',e:'🍲',time:30,zutaten:['Rote Linsen','Dosentomaten','Karotte','Zwiebel','Knoblauch','Kreuzkümmel','Ingwer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=roter+linseneintopf+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=linseneintopf'}]},
+    {n:'Rotes Linsen-Curry',e:'🍛',time:30,zutaten:['Rote Linsen','Kokosmilch','Tomate','Zwiebel','Currypaste','Ingwer','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=rotes+linsen+curry+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=linsen+curry'}]},
+    {n:'Linsensuppe',e:'🥣',time:35,zutaten:['Linsen','Sellerie','Karotte','Kartoffel','Zwiebel','Knoblauch','Lorbeer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsensuppe+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=linsensuppe'}]},
+    {n:'Linsen-Tacos',e:'🌮',time:25,zutaten:['Linsen','Tortillas','Salsa','Avocado','Mais','Koriander','Limette'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+tacos+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=linsen+tacos'}]},
+    {n:'Linsen-Bolognese',e:'🍝',time:35,zutaten:['Linsen','Nudeln','Dosentomaten','Zwiebel','Knoblauch','Rosmarin','Basilikum'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+bolognese+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=linsen+bolognese'}]},
+    {n:'Linsensalat Kräuter',e:'🥗',time:20,zutaten:['Linsen','Petersilie','Minze','Zitrone','Olivenöl','Tomate','Gurke'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsensalat+kr%C3%A4uter'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=linsensalat'}]},
+    {n:'Linsen-Bowl Süßkartoffel',e:'🍠',time:35,zutaten:['Linsen','Süßkartoffel','Spinat','Tahini','Zitrone','Knoblauch','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+s%C3%BC%C3%9Fkartoffel+bowl'},{nm:'Eat This',url:'https://www.eat-this.org/?s=linsen+s%C3%BC%C3%9Fkartoffel'}]},
+    {n:'Linsen-Burger',e:'🍔',time:40,zutaten:['Linsen','Haferflocken','Zwiebel','Knoblauch','Paprikapulver','Petersilie','Semmelbrösel'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+burger+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=linsen+burger'}]},
+    {n:'Dhal',e:'🫕',time:30,zutaten:['Rote Linsen','Kokosmilch','Zwiebel','Knoblauch','Kurkuma','Kreuzkümmel','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=dhal+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=dhal'}]},
+    {n:'Mujaddara',e:'🍚',time:40,zutaten:['Linsen','Reis','Zwiebeln','Olivenöl','Kreuzkümmel','Zimt','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=mujaddara'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=mujaddara'}]},
+    {n:'Grüne Linsen Spinat',e:'🌿',time:30,zutaten:['Grüne Linsen','Spinat','Knoblauch','Zitrone','Olivenöl','Chili','Muskat'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+spinat+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=linsen+spinat'}]},
+    {n:'Linsen-Tomaten-Pfanne',e:'🍅',time:25,zutaten:['Linsen','Dosentomaten','Paprika','Zwiebel','Knoblauch','Basilikum','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linsen+tomaten+pfanne'},{nm:'Eat This',url:'https://www.eat-this.org/?s=linsen+tomaten'}]},
   ]},
-  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🧆',col:'#d97706', items:[
-    {n:'Kichererbsen-Curry',e:'🍛'},{n:'Falafel',e:'🧆'},{n:'Falafel-Wrap',e:'🌯'},
-    {n:'Kichererbsen-Burger',e:'🍔'},{n:'Kichererbsen-Salat',e:'🥗'},{n:'Chana Masala',e:'🫕'},
-    {n:'Buddha-Bowl',e:'🥙'},{n:'Marokk. Kichererbsen',e:'🫙'},{n:'Geröstete Kichererbsen',e:'🫘'},
-    {n:'Kichererbsensuppe',e:'🥣'},{n:'Pasta e Ceci',e:'🍝'},{n:'Socca',e:'🥞'},
+  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🧆',col:'#d97706',items:[
+    {n:'Kichererbsen-Curry',e:'🍛',time:30,zutaten:['Kichererbsen','Kokosmilch','Tomate','Zwiebel','Currypulver','Ingwer','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kichererbsen+curry+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=kichererbsen+curry'}]},
+    {n:'Falafel',e:'🧆',time:35,zutaten:['Kichererbsen','Zwiebel','Knoblauch','Koriander','Petersilie','Kreuzkümmel','Sesam'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=falafel+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=falafel'}]},
+    {n:'Falafel-Wrap',e:'🌯',time:40,zutaten:['Falafel','Pitabrot','Hummus','Tomate','Gurke','Tahini','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=falafel+wrap'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=falafel+wrap'}]},
+    {n:'Kichererbsen-Burger',e:'🍔',time:40,zutaten:['Kichererbsen','Haferflocken','Zwiebel','Paprikapulver','Knoblauch','Petersilie','Semmelbrösel'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kichererbsen+burger+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=kichererbsen+burger'}]},
+    {n:'Kichererbsen-Salat',e:'🥗',time:15,zutaten:['Kichererbsen','Gurke','Tomate','Rotkohl','Olivenöl','Zitrone','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kichererbsen+salat'},{nm:'Eat This',url:'https://www.eat-this.org/?s=kichererbsen+salat'}]},
+    {n:'Chana Masala',e:'🫕',time:35,zutaten:['Kichererbsen','Tomate','Zwiebel','Knoblauch','Ingwer','Garam Masala','Kurkuma'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=chana+masala+vegan'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=chana+masala'}]},
+    {n:'Buddha-Bowl',e:'🥙',time:30,zutaten:['Kichererbsen','Quinoa','Avocado','Süßkartoffel','Spinat','Tahini','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=buddha+bowl+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=buddha+bowl'}]},
+    {n:'Marokk. Kichererbsen',e:'🫙',time:35,zutaten:['Kichererbsen','Dosentomaten','Rosinen','Ras el Hanout','Zwiebel','Knoblauch','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=marokkanische+kichererbsen+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=marokkanisch+kichererbsen'}]},
+    {n:'Geröstete Kichererbsen',e:'🫘',time:30,zutaten:['Kichererbsen','Olivenöl','Paprikapulver','Kreuzkümmel','Knoblauchpulver','Salz','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=ger%C3%B6stete+kichererbsen'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=ger%C3%B6stete+kichererbsen'}]},
+    {n:'Kichererbsensuppe',e:'🥣',time:30,zutaten:['Kichererbsen','Spinat','Tomate','Zwiebel','Knoblauch','Kreuzkümmel','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kichererbsensuppe+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=kichererbsensuppe'}]},
+    {n:'Pasta e Ceci',e:'🍝',time:30,zutaten:['Kichererbsen','Pasta','Dosentomaten','Rosmarin','Knoblauch','Olivenöl','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=pasta+e+ceci'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=pasta+e+ceci'}]},
+    {n:'Socca',e:'🥞',time:25,zutaten:['Kichererbsenmehl','Wasser','Olivenöl','Rosmarin','Zwiebel','Salz','Pfeffer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=socca+kichererbsen'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=socca'}]},
   ]},
-  {g:'Kartoffelgerichte', tag:'Kartoffel',   emoji:'🥔', col:'#ca8a04', items:[
-    {n:'Ofenkartoffeln',e:'🥔'},{n:'Kartoffelgratin',e:'🫕'},{n:'Bratkartoffeln',e:'🍳'},
-    {n:'Kartoffel-Wedges',e:'🍟'},{n:'Smashed Potatoes',e:'🥔'},{n:'Kartoffelpüree',e:'🥣'},
-    {n:'Kartoffelauflauf',e:'🫕'},{n:'Kartoffelsalat',e:'🥗'},{n:'Kartoffelpfanne',e:'🍳'},
-    {n:'Gefüllte Ofenkartoffeln',e:'🧀'},{n:'Kartoffelsuppe',e:'🥣'},
+  {g:'Kartoffelgerichte',tag:'Kartoffel',emoji:'🥔',col:'#ca8a04',items:[
+    {n:'Ofenkartoffeln',e:'🥔',time:60,zutaten:['Kartoffeln','Olivenöl','Rosmarin','Knoblauch','Salz','Paprikapulver','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=ofenkartoffeln+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=ofenkartoffeln'}]},
+    {n:'Kartoffelgratin',e:'🫕',time:60,zutaten:['Kartoffeln','Hafersahne','Knoblauch','Hefeflocken','Muskat','Zwiebel','Thymian'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelgratin+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=kartoffelgratin'}]},
+    {n:'Bratkartoffeln',e:'🍳',time:30,zutaten:['Kartoffeln','Zwiebel','Paprikapulver','Rosmarin','Knoblauch','Öl','Pfeffer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=bratkartoffeln+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=bratkartoffeln'}]},
+    {n:'Kartoffel-Wedges',e:'🍟',time:40,zutaten:['Kartoffeln','Olivenöl','Paprikapulver','Knoblauchpulver','Rosmarin','Salz','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffel+wedges+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=wedges'}]},
+    {n:'Smashed Potatoes',e:'🥔',time:50,zutaten:['Kleine Kartoffeln','Olivenöl','Knoblauch','Rosmarin','Salz','Pfeffer','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=smashed+potatoes+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=smashed+potatoes'}]},
+    {n:'Kartoffelpüree',e:'🥣',time:30,zutaten:['Kartoffeln','Pflanzenmilch','Vegane Butter','Muskat','Salz','Knoblauch','Schnittlauch'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelp%C3%BCree+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=kartoffelp%C3%BCree+vegan'}]},
+    {n:'Kartoffelauflauf',e:'🫕',time:55,zutaten:['Kartoffeln','Hafersahne','Hefeflocken','Zwiebel','Knoblauch','Thymian','Paniermehl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelauflauf+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=kartoffelauflauf'}]},
+    {n:'Kartoffelsalat',e:'🥗',time:30,zutaten:['Kartoffeln','Gurke','Zwiebel','Senf','Essig','Öl','Schnittlauch'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelsalat+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=kartoffelsalat'}]},
+    {n:'Kartoffelpfanne',e:'🍳',time:25,zutaten:['Kartoffeln','Paprika','Zucchini','Zwiebel','Knoblauch','Paprikapulver','Öl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelpfanne+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=kartoffelpfanne'}]},
+    {n:'Gefüllte Ofenkartoffeln',e:'🧀',time:65,zutaten:['Große Kartoffeln','Kichererbsen','Spinat','Cashew-Creme','Knoblauch','Schnittlauch','Paprikapulver'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gef%C3%BCllte+ofenkartoffeln+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=gef%C3%BCllte+kartoffel'}]},
+    {n:'Kartoffelsuppe',e:'🥣',time:35,zutaten:['Kartoffeln','Sellerie','Karotte','Zwiebel','Knoblauch','Lorbeer','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kartoffelsuppe+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=kartoffelsuppe'}]},
   ]},
-  {g:'Reisgerichte',     tag:'Reis',         emoji:'🍚', col:'#0891b2', items:[
-    {n:'Reis Lauch-Curry',e:'🍛'},{n:'Reis Tofu',e:'🍱'},{n:'Reis Tomate Zucchini',e:'🍅'},
-    {n:'Reis Brokkoli Karotten',e:'🥦'},{n:'Gebratener Reis',e:'🍳'},{n:'Reis Bohnen Mais',e:'🌽'},
-    {n:'Reis Linsen',e:'🫘'},{n:'Risotto',e:'🍚'},{n:'Sushi-Bowl vegan',e:'🍣'},
-    {n:'Kimchi-Reis',e:'🌶️'},
+  {g:'Reisgerichte',tag:'Reis',emoji:'🍚',col:'#0891b2',items:[
+    {n:'Reis Lauch-Curry',e:'🍛',time:30,zutaten:['Reis','Lauch','Kokosmilch','Currypulver','Knoblauch','Ingwer','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+lauch+curry+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=lauch+curry+reis'}]},
+    {n:'Reis Tofu',e:'🍱',time:25,zutaten:['Reis','Tofu','Sojasoße','Sesamöl','Knoblauch','Ingwer','Frühlingszwiebeln'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+tofu+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=tofu+reis'}]},
+    {n:'Reis Tomate Zucchini',e:'🍅',time:25,zutaten:['Reis','Tomate','Zucchini','Knoblauch','Basilikum','Olivenöl','Oregano'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+tomate+zucchini+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=reis+tomate+zucchini'}]},
+    {n:'Reis Brokkoli Karotten',e:'🥦',time:25,zutaten:['Reis','Brokkoli','Karotte','Knoblauch','Sojasoße','Sesamöl','Ingwer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+brokkoli+karotten+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=reis+brokkoli'}]},
+    {n:'Gebratener Reis',e:'🍳',time:20,zutaten:['Reis','Sojasoße','Sesamöl','Erbsen','Karotte','Knoblauch','Frühlingszwiebeln'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gebratener+reis+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=gebratener+reis'}]},
+    {n:'Reis Bohnen Mais',e:'🌽',time:25,zutaten:['Reis','Schwarze Bohnen','Mais','Paprika','Kreuzkümmel','Limette','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+bohnen+mais+vegan'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=rice+beans'}]},
+    {n:'Reis Linsen',e:'🫘',time:30,zutaten:['Reis','Linsen','Zwiebel','Knoblauch','Kreuzkümmel','Kurkuma','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=reis+linsen+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=reis+linsen'}]},
+    {n:'Risotto',e:'🍚',time:35,zutaten:['Risotto-Reis','Weißwein vegan','Gemüsebrühe','Zwiebel','Knoblauch','Hefeflocken','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=risotto+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=risotto'}]},
+    {n:'Sushi-Bowl vegan',e:'🍣',time:30,zutaten:['Sushi-Reis','Nori','Gurke','Avocado','Edamame','Sojasoße','Sesam'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=sushi+bowl+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=sushi+bowl'}]},
+    {n:'Kimchi-Reis',e:'🌶️',time:20,zutaten:['Reis','Kimchi','Sojasoße','Sesamöl','Frühlingszwiebeln','Knoblauch','Sesam'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=kimchi+reis+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=kimchi+reis'}]},
   ]},
-  {g:'Nudelgerichte',    tag:'Nudeln',       emoji:'🍝', col:'#c2410c', items:[
-    {n:'Nudeln grünes Pesto',e:'🌿'},{n:'Nudeln Tomatensauce',e:'🍅'},{n:'Nudeln Bolognese',e:'🍝'},
-    {n:'Nudeln Brokkoli',e:'🥦'},{n:'Nudeln Pilzsauce',e:'🍄'},{n:'Nudeln Spinat-Sahne',e:'🥬'},
-    {n:'One-Pot-Pasta',e:'🫕'},{n:'Vegane Mac and Cheese',e:'🧀'},{n:'Ramen vegan',e:'🍜'},
+  {g:'Nudelgerichte',tag:'Nudeln',emoji:'🍝',col:'#c2410c',items:[
+    {n:'Nudeln grünes Pesto',e:'🌿',time:20,zutaten:['Nudeln','Basilikum','Pinienkerne','Knoblauch','Olivenöl','Hefeflocken','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+gr%C3%BCnes+pesto+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=pesto+vegan'}]},
+    {n:'Nudeln Tomatensauce',e:'🍅',time:25,zutaten:['Nudeln','Dosentomaten','Knoblauch','Basilikum','Olivenöl','Zwiebel','Oregano'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+tomatensauce+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=pasta+tomate'}]},
+    {n:'Nudeln Bolognese',e:'🍝',time:40,zutaten:['Nudeln','Linsen','Dosentomaten','Karotte','Sellerie','Zwiebel','Rotwein vegan'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+bolognese+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=bolognese+vegan'}]},
+    {n:'Nudeln Brokkoli',e:'🥦',time:20,zutaten:['Nudeln','Brokkoli','Knoblauch','Chili','Olivenöl','Zitrone','Hefeflocken'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+brokkoli+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=nudeln+brokkoli'}]},
+    {n:'Nudeln Pilzsauce',e:'🍄',time:30,zutaten:['Nudeln','Champignons','Hafersahne','Knoblauch','Thymian','Weißwein vegan','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+pilzsauce+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=pasta+pilze'}]},
+    {n:'Nudeln Spinat-Sahne',e:'🥬',time:25,zutaten:['Nudeln','Spinat','Hafersahne','Knoblauch','Hefeflocken','Muskat','Zwiebel'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=nudeln+spinat+sahne+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=pasta+spinat'}]},
+    {n:'One-Pot-Pasta',e:'🫕',time:20,zutaten:['Nudeln','Dosentomaten','Gemüsebrühe','Knoblauch','Basilikum','Zwiebel','Zucchini'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=one+pot+pasta+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=one+pot+pasta'}]},
+    {n:'Vegane Mac and Cheese',e:'🧀',time:30,zutaten:['Nudeln','Cashews','Hefeflocken','Kurkuma','Senf','Knoblauch','Pflanzenmilch'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=vegane+mac+and+cheese'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=mac+and+cheese'}]},
+    {n:'Ramen vegan',e:'🍜',time:35,zutaten:['Ramen-Nudeln','Miso','Sojasoße','Pak Choi','Tofu','Pilze','Nori'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=ramen+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=ramen+vegan'}]},
   ]},
-  {g:'Gemüsegerichte',   tag:'Gemüse',       emoji:'🥬', col:'#16a34a', items:[
-    {n:'Spitzkohl-Tofu-Pfanne',e:'🥬'},{n:'Brokkoli Knoblauch',e:'🥦'},{n:'Ofengemüse',e:'🫕'},
-    {n:'Auberginen-Curry',e:'🍆'},{n:'Gefüllte Paprika',e:'🫑'},{n:'Ratatouille',e:'🍅'},
-    {n:'Süßkartoffel-Curry',e:'🍛'},{n:'Gebackene Süßkartoffeln',e:'🍠'},{n:'Rosenkohl Sesam',e:'🌰'},
+  {g:'Gemüsegerichte',tag:'Gemüse',emoji:'🥬',col:'#16a34a',items:[
+    {n:'Spitzkohl-Tofu-Pfanne',e:'🥬',time:25,zutaten:['Spitzkohl','Tofu','Sojasoße','Knoblauch','Ingwer','Sesamöl','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=spitzkohl+tofu+pfanne'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=spitzkohl+tofu'}]},
+    {n:'Brokkoli Knoblauch',e:'🥦',time:15,zutaten:['Brokkoli','Knoblauch','Olivenöl','Chili','Zitrone','Salz','Pfeffer'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=brokkoli+knoblauch+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=brokkoli'}]},
+    {n:'Ofengemüse',e:'🫕',time:45,zutaten:['Paprika','Zucchini','Aubergine','Karotte','Olivenöl','Knoblauch','Kräuter der Provence'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=ofengem%C3%BCse+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=ofengem%C3%BCse'}]},
+    {n:'Auberginen-Curry',e:'🍆',time:35,zutaten:['Aubergine','Kokosmilch','Tomate','Currypaste','Ingwer','Knoblauch','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=auberginen+curry+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=auberginen+curry'}]},
+    {n:'Gefüllte Paprika',e:'🫑',time:50,zutaten:['Paprika','Reis','Kichererbsen','Tomate','Zwiebel','Knoblauch','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gef%C3%BCllte+paprika+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=gef%C3%BCllte+paprika'}]},
+    {n:'Ratatouille',e:'🍅',time:45,zutaten:['Aubergine','Zucchini','Tomate','Paprika','Zwiebel','Knoblauch','Thymian'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=ratatouille+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=ratatouille'}]},
+    {n:'Süßkartoffel-Curry',e:'🍛',time:35,zutaten:['Süßkartoffel','Kokosmilch','Kichererbsen','Spinat','Currypulver','Ingwer','Limette'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=s%C3%BC%C3%9Fkartoffel+curry+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=s%C3%BC%C3%9Fkartoffel+curry'}]},
+    {n:'Gebackene Süßkartoffeln',e:'🍠',time:55,zutaten:['Süßkartoffel','Olivenöl','Zimt','Honig vegan','Pekannüsse','Rosmarim','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gebackene+s%C3%BC%C3%9Fkartoffeln+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=s%C3%BC%C3%9Fkartoffel+backen'}]},
+    {n:'Rosenkohl Sesam',e:'🌰',time:30,zutaten:['Rosenkohl','Sesam','Sojasoße','Ahornsirup','Knoblauch','Sesamöl','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=rosenkohl+sesam+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=rosenkohl'}]},
   ]},
-  {g:'Eintöpfe',         tag:'Eintopf',      emoji:'🫕', col:'#7c3aed', items:[
-    {n:'Lasagne',e:'🫕'},{n:'Lasagnesuppe',e:'🥣'},{n:'Linseneintopf',e:'🍲'},
-    {n:'Chili sin Carne',e:'🌶️'},{n:'Gemüseeintopf',e:'🥕'},{n:'Tomaten-Linsen-Eintopf',e:'🍅'},
-    {n:'Marokkanischer Eintopf',e:'🏺'},
+  {g:'Eintöpfe',tag:'Eintopf',emoji:'🫕',col:'#7c3aed',items:[
+    {n:'Lasagne',e:'🫕',time:60,zutaten:['Lasagneplatten','Linsen','Dosentomaten','Hafersahne','Hefeflocken','Zwiebel','Knoblauch'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=lasagne+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=lasagne+vegan'}]},
+    {n:'Lasagnesuppe',e:'🥣',time:35,zutaten:['Lasagneplatten','Linsen','Dosentomaten','Gemüsebrühe','Basilikum','Knoblauch','Hefeflocken'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=lasagnesuppe+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=lasagnesuppe'}]},
+    {n:'Linseneintopf',e:'🍲',time:40,zutaten:['Linsen','Kartoffel','Karotte','Sellerie','Zwiebel','Lorbeer','Essig'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=linseneintopf+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=linseneintopf'}]},
+    {n:'Chili sin Carne',e:'🌶️',time:35,zutaten:['Kidneybohnen','Mais','Dosentomaten','Paprika','Zwiebel','Kreuzkümmel','Chili'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=chili+sin+carne'},{nm:'Eat This',url:'https://www.eat-this.org/?s=chili+sin+carne'}]},
+    {n:'Gemüseeintopf',e:'🥕',time:40,zutaten:['Karotte','Kartoffel','Sellerie','Lauch','Zwiebel','Gemüsebrühe','Petersilie'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gem%C3%BCseeintopf+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=gem%C3%BCseeintopf'}]},
+    {n:'Tomaten-Linsen-Eintopf',e:'🍅',time:35,zutaten:['Linsen','Dosentomaten','Paprika','Zwiebel','Knoblauch','Kurkuma','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tomaten+linsen+eintopf+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=tomaten+linsen'}]},
+    {n:'Marokkanischer Eintopf',e:'🏺',time:40,zutaten:['Kichererbsen','Süßkartoffel','Tomate','Ras el Hanout','Zimt','Rosinen','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=marokkanischer+eintopf+vegan'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=moroccan+stew'}]},
   ]},
-  {g:'Teiggerichte',     tag:'Teig',         emoji:'🍕', col:'#b45309', items:[
-    {n:'Pfannkuchen',e:'🥞'},{n:'Pizza',e:'🍕'},{n:'Wraps',e:'🌯'},
-    {n:'Flammkuchen',e:'🫓'},{n:'Quesadillas',e:'🫔'},{n:'Burger',e:'🍔'},
+  {g:'Teiggerichte',tag:'Teig',emoji:'🍕',col:'#b45309',items:[
+    {n:'Pfannkuchen',e:'🥞',time:25,zutaten:['Mehl','Hafermilch','Backpulver','Leinsamen','Zucker','Vanille','Öl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=vegane+pfannkuchen'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=pfannkuchen+vegan'}]},
+    {n:'Pizza',e:'🍕',time:50,zutaten:['Pizzateig','Tomatensauce','Gemüse nach Wahl','Olivenöl','Oregano','Knoblauch','Hefeflocken'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=pizza+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=pizza+vegan'}]},
+    {n:'Wraps',e:'🌯',time:20,zutaten:['Tortilla','Hummus','Salat','Tomate','Gurke','Avocado','Zitrone'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=wraps+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=vegane+wraps'}]},
+    {n:'Flammkuchen',e:'🫓',time:35,zutaten:['Flammkuchenteig','Hafercreme','Zwiebel','Champignons','Rosmarin','Knoblauch','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=flammkuchen+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=flammkuchen+vegan'}]},
+    {n:'Quesadillas',e:'🫔',time:20,zutaten:['Tortilla','Schwarze Bohnen','Mais','Paprika','Guacamole','Salsa','Koriander'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=quesadillas+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=quesadillas+vegan'}]},
+    {n:'Burger',e:'🍔',time:40,zutaten:['Burgerbrötchen','Patty vegan','Salat','Tomate','Rote Zwiebel','Senf','Ketchup'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=veganer+burger'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=veganer+burger'}]},
   ]},
-  {g:'Saucen & Beilagen',tag:'Sauce',        emoji:'🥫', col:'#be185d', items:[
-    {n:'Pilzsauce',e:'🍄'},{n:'Tomatensauce',e:'🍅'},{n:'Curry-Sauce',e:'🍛'},
-    {n:'Grünes Pesto',e:'🌿'},{n:'Bolognese',e:'🍝'},{n:'Guacamole',e:'🥑'},
-    {n:'Tahini-Sauce',e:'🫙'},{n:'Harissa',e:'🌶️'},
+  {g:'Saucen & Beilagen',tag:'Sauce',emoji:'🥫',col:'#be185d',items:[
+    {n:'Pilzsauce',e:'🍄',time:20,zutaten:['Champignons','Hafersahne','Knoblauch','Thymian','Weißwein vegan','Petersilie','Olivenöl'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=pilzsauce+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=pilzsauce+vegan'}]},
+    {n:'Tomatensauce',e:'🍅',time:25,zutaten:['Dosentomaten','Knoblauch','Basilikum','Olivenöl','Zwiebel','Zucker','Oregano'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tomatensauce+vegan'},{nm:'Eat This',url:'https://www.eat-this.org/?s=tomatensauce'}]},
+    {n:'Curry-Sauce',e:'🍛',time:20,zutaten:['Kokosmilch','Currypaste','Ingwer','Knoblauch','Limette','Koriander','Zwiebel'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=curry+sauce+vegan'},{nm:'Kochbar',url:'https://www.kochbar.de/rezept/suche?q=currysauce+vegan'}]},
+    {n:'Grünes Pesto',e:'🌿',time:10,zutaten:['Basilikum','Pinienkerne','Knoblauch','Olivenöl','Hefeflocken','Zitrone','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=gr%C3%BCnes+pesto+vegan'},{nm:'Bianca Zapatka',url:'https://biancazapatka.com/de/?s=pesto+vegan'}]},
+    {n:'Bolognese',e:'🍝',time:40,zutaten:['Linsen','Dosentomaten','Karotte','Sellerie','Zwiebel','Knoblauch','Rosmarin'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=vegane+bolognese'},{nm:'Eat This',url:'https://www.eat-this.org/?s=bolognese+vegan'}]},
+    {n:'Guacamole',e:'🥑',time:10,zutaten:['Avocado','Limette','Koriander','Knoblauch','Tomate','Zwiebel','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=guacamole+vegan'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=guacamole'}]},
+    {n:'Tahini-Sauce',e:'🫙',time:5,zutaten:['Tahini','Zitrone','Knoblauch','Wasser','Salz','Petersilie','Kreuzkümmel'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=tahini+sauce'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=tahini+sauce'}]},
+    {n:'Harissa',e:'🌶️',time:15,zutaten:['Rote Chilis','Knoblauch','Kreuzkümmel','Koriander','Olivenöl','Zitrone','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=harissa+selbst+machen'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=harissa'}]},
   ]},
 ];
 
@@ -885,16 +949,29 @@ function openFood(name,group,isCustom,notes){
   const fid='f_'+nm(name).replace(/[^a-z0-9]/g,'_').slice(0,30);
   addR({id:fid,name,cat:group,type:'food'});renderRecs();
   const fav=isF(fid);
+  const fg=FG.find(g=>g.g===group);
+  const it=fg?fg.items.find(i=>i.n===name):null;
   const db=document.getElementById('det-body');
-  db.innerHTML='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">'+esc(group)+'</div>'
-    +'<div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:11px">'+esc(name)+'</div>'
-    +(notes?'<div style="background:var(--bg3);border-radius:11px;padding:12px;font-size:12px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-bottom:10px;border:1px solid var(--border)">'+esc(notes)+'</div>'
-           :'<div style="background:var(--bg3);border-radius:11px;padding:12px;font-size:11px;color:var(--text3);margin-bottom:10px;border:1px solid var(--border)">Suche oben oder frag Planty 🌱</div>')
-    +'<div style="display:flex;gap:7px">'
+  let html='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">'+esc(group)+'</div>'
+    +'<div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px">'+esc(name)+'</div>';
+  if(it&&it.time){html+='<div style="display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px">⏱️ '+it.time+' min</div>';}
+  if(it&&it.zutaten&&it.zutaten.length){
+    html+='<div style="background:var(--bg3);border-radius:11px;padding:11px 13px;margin-bottom:10px;border:1px solid var(--border)">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:7px">🧂 Basis-Zutaten</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:5px">'+it.zutaten.map(z=>'<span style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:11px;color:var(--text2)">'+esc(z)+'</span>').join('')+'</div></div>';
+  }
+  if(notes){html+='<div style="background:var(--bg3);border-radius:11px;padding:12px;font-size:12px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-bottom:10px;border:1px solid var(--border)">'+esc(notes)+'</div>';}
+  if(it&&it.links&&it.links.length){
+    html+='<div style="background:var(--bg3);border-radius:11px;padding:11px 13px;margin-bottom:10px;border:1px solid var(--border)">'
+      +'<div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:7px">🔗 Rezepte</div>'
+      +it.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;padding:6px 0;font-size:12px;font-weight:600;color:var(--a);text-decoration:none;border-bottom:1px solid var(--border)">'+esc(l.nm)+' <span style="font-size:10px;opacity:.5">↗</span></a>').join('')+'</div>';
+  }
+  html+='<div style="display:flex;gap:7px">'
     +'<button id="food-fav" style="flex:1;padding:11px;border-radius:12px;border:1px solid '+(fav?'var(--a)':'var(--border)')+';background:'+(fav?'var(--al)':'var(--bg3)')+';color:'+(fav?'var(--a)':'var(--text2)')+';font-size:13px;font-weight:700;cursor:pointer">'+(fav?'⭐ Favorit':'☆ Favorit')+'</button>'
     +'<button id="food-planty" style="padding:11px 14px;border-radius:12px;border:1px solid var(--a);background:var(--al);color:var(--a);font-size:12px;font-weight:700;cursor:pointer">🌱 Rezept</button>'
     +'</div>'
     +(isCustom?'<button id="food-del" class="btn-del" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Löschen</button>':'');
+  db.innerHTML=html;
   document.getElementById('food-fav').addEventListener('click',function(){togF(fid,name,group);const f=isF(fid);this.textContent=f?'⭐ Favorit':'☆ Favorit';this.style.background=f?'var(--al)':'var(--bg3)';this.style.color=f?'var(--a)':'var(--text2)';this.style.borderColor=f?'var(--a)':'var(--border)';});
   document.getElementById('food-planty').addEventListener('click',()=>{closeM('m-det');setTimeout(()=>{openPlanty();setTimeout(()=>{const ki=document.getElementById('ki-in');if(ki){ki.value='Veganes Rezept für: '+name;sendKI();}},300);},200);});
   if(isCustom&&document.getElementById('food-del'))document.getElementById('food-del').addEventListener('click',()=>{if(!confirm('Löschen?'))return;sD(lD().filter(d=>d.n!==name));closeM('m-det');renderFoodList();});
