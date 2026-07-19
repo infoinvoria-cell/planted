@@ -10,6 +10,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
 <link rel="icon" type="image/png" href="/icon.png">
 <title>Planted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root{
@@ -30,7 +33,7 @@
   --purple:#c084fc;--teal:#2dd4a0;--orange:#fb923c;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
+html,body{height:100%;font-family:'Nunito',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
 button{cursor:pointer;border:none;background:none;font-family:inherit;font-size:inherit}
 input,select,textarea{font-family:inherit;font-size:inherit}
 *{scrollbar-width:none}::-webkit-scrollbar{display:none}
@@ -55,7 +58,14 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--bg)}
 #view{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch}
 .screen{display:none;min-height:100%;padding-bottom:calc(var(--nh) + 58px);background:var(--bg)}
-.screen.on{display:block}
+.screen.on{display:block;animation:fadeSlideIn .22s cubic-bezier(.4,0,.2,1) both}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.mbg.on .modal{animation:slideUpSpring .3s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes slideUpSpring{from{opacity:0;transform:translateY(60px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cat-card:active,.pill:active{transform:scale(.97);transition:transform .1s}
+.ni:active svg{transform:scale(.88);transition:transform .12s}
+.nfab:active{transform:scale(.92);transition:transform .1s}
+#view{scroll-behavior:smooth}
 
 .topbar{padding:14px 16px 10px;background:var(--bg2);border-bottom:1px solid var(--border)}
 .tb1{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -1592,6 +1602,57 @@ function bindAll(){
   document.addEventListener('mousemove',e=>{if(!dragging)return;const dy=startY-e.clientY;const newH=Math.min(Math.max(startH+dy,260),window.innerHeight*.98);plantyModal.style.maxHeight=newH+'px';plantyModal.style.height=newH+'px';});
   document.addEventListener('mouseup',()=>{dragging=false;});
 }
+
+// SWIPE BACK
+(function(){
+  let sx=0,sy=0,st=0;
+  const v=document.getElementById('view');
+  if(!v)return;
+  v.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();},{passive:true});
+  v.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0];
+    const dx=t.clientX-sx,dy=Math.abs(t.clientY-sy),dt=Date.now()-st;
+    if(sx<40&&dx>80&&dy<60&&dt<300){
+      const back={cat:'home',detail:'cat',notes:'home',planty:'home',profile:'home',favs:'home',recs:'home'};
+      const dest=back[CT];if(dest)goTab(dest);
+    }
+  },{passive:true});
+})();
+
+// MODAL DRAG
+function initModalDrag(modalId){
+  const mbg=document.querySelector('#'+modalId+' .mbg')||document.getElementById(modalId);
+  const modal=mbg?mbg.querySelector('.modal'):null;
+  const mh=mbg?mbg.querySelector('.mh'):null;
+  if(!modal||!mh)return;
+  let sy=0,sh=0,dragging=false;
+  const maxH=()=>window.innerHeight*0.95;
+  const snapClose=()=>window.innerHeight*0.25;
+  function onStart(y){dragging=true;sy=y;sh=modal.offsetHeight;}
+  function onMove(y){
+    if(!dragging)return;
+    const dy=sy-y;
+    const nh=Math.min(Math.max(sh+dy,180),maxH());
+    modal.style.transition='none';
+    modal.style.maxHeight=nh+'px';
+    modal.style.height=nh+'px';
+  }
+  function onEnd(y){
+    if(!dragging)return;dragging=false;
+    modal.style.transition='';
+    const cur=modal.offsetHeight;
+    if(cur<snapClose()){closeM(modalId);}
+    else if(cur<window.innerHeight*0.5){modal.style.maxHeight='55vh';modal.style.height='55vh';}
+    else{modal.style.maxHeight=maxH()+'px';modal.style.height=maxH()+'px';}
+  }
+  mh.addEventListener('touchstart',e=>{onStart(e.touches[0].clientY);},{passive:true});
+  mh.addEventListener('touchmove',e=>{onMove(e.touches[0].clientY);e.preventDefault();},{passive:false});
+  mh.addEventListener('touchend',e=>{onEnd(e.changedTouches[0].clientY);});
+  mh.style.cursor='ns-resize';
+}
+['m-planty','m-det','m-add-custom','m-dish','m-note','m-net'].forEach(id=>{
+  const el=document.getElementById(id);if(el)initModalDrag(id);
+});
 
 // INIT
 loadAPI();
