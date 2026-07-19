@@ -54,7 +54,7 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--bg)}
 #view{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch}
-.screen{display:none;min-height:100%;padding-bottom:calc(var(--nh) + 40px);background:var(--bg)}
+.screen{display:none;min-height:100%;padding-bottom:calc(var(--nh) + 58px);background:var(--bg)}
 .screen.on{display:block}
 
 .topbar{padding:14px 16px 10px;background:var(--bg2);border-bottom:1px solid var(--border)}
@@ -79,7 +79,7 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .si-x.on{display:flex}
 .si-x svg{width:13px;height:13px}
 
-#nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:60;padding-bottom:var(--sb)}
+#nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:60;padding-bottom:calc(var(--sb) + 18px)}
 .nav-in{display:flex;align-items:center;height:var(--nh)}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;color:var(--text3);font-size:9px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;border:none;background:none;transition:color .15s}
 .ni svg{width:21px;height:21px;transition:transform .15s}
@@ -244,7 +244,7 @@ textarea.fi{min-height:80px;resize:vertical;line-height:1.6}
 .ap{padding:3px 8px;border-radius:99px;font-size:9px;font-weight:700;border:1px solid var(--border);color:var(--text3);background:var(--bg3);display:inline-block}
 .ap.live{border-color:var(--a);color:var(--a);background:var(--ag)}
 
-#afab{position:fixed;bottom:calc(var(--nh) + var(--sb) + 12px);right:16px;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;border:none;border-radius:99px;padding:10px 14px;font-size:12px;font-weight:700;display:none;align-items:center;gap:5px;box-shadow:0 3px 16px rgba(26,124,53,.3);z-index:50;cursor:pointer}
+#afab{position:fixed;bottom:calc(var(--nh) + var(--sb) + 30px);right:16px;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;border:none;border-radius:99px;padding:10px 14px;font-size:12px;font-weight:700;display:none;align-items:center;gap:5px;box-shadow:0 3px 16px rgba(26,124,53,.3);z-index:50;cursor:pointer}
 #afab.on{display:flex}
 #afab svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
 
@@ -556,16 +556,16 @@ DB.laborwerte=[{id:'lb1',col:'#6d28d9',lbl:'Referenz',title:'Optimale Laborwerte
 const ALL=Object.values(DB).flat();
 
 const FG=[
-  {g:'Tofu-Gerichte',    tag:'Tofu',        emoji:'🥩', col:'#dc2626', items:['Gebratener Tofu Gemüse','Tofu-Tacos','Tofu-Curry','Tofu-Salat Sesam','Tofu-Ramen','Tofu-Bowl Reis','Tofu-Wrap','Tofu-Bolognese','Tofu-Pfanne Brokkoli','Mapo Tofu vegan','Tofu-Scramble','Tofu Erdnusssauce','Tofu-Spieße','Palak Tofu','Tofu-Gyros']},
-  {g:'Linsengerichte',   tag:'Linsen',       emoji:'🌱', col:'#16a34a', items:['Roter Linseneintopf','Rotes Linsen-Curry','Linsensuppe','Linsen-Tacos','Linsen-Bolognese','Linsensalat Kräuter','Linsen-Bowl Süßkartoffel','Linsen-Burger','Dhal','Mujaddara','Grüne Linsen Spinat','Linsen-Tomaten-Pfanne']},
-  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🫘',col:'#d97706', items:['Kichererbsen-Curry','Falafel','Falafel-Wrap','Kichererbsen-Burger','Kichererbsen-Salat','Chana Masala','Buddha-Bowl','Marokk. Kichererbsen','Geröstete Kichererbsen','Kichererbsensuppe','Pasta e Ceci','Socca']},
+  {g:'Tofu-Gerichte',    tag:'Tofu',        emoji:'🍱', col:'#dc2626', items:['Gebratener Tofu Gemüse','Tofu-Tacos','Tofu-Curry','Tofu-Salat Sesam','Tofu-Ramen','Tofu-Bowl Reis','Tofu-Wrap','Tofu-Bolognese','Tofu-Pfanne Brokkoli','Mapo Tofu vegan','Tofu-Scramble','Tofu Erdnusssauce','Tofu-Spieße','Palak Tofu','Tofu-Gyros']},
+  {g:'Linsengerichte',   tag:'Linsen',       emoji:'🫘', col:'#16a34a', items:['Roter Linseneintopf','Rotes Linsen-Curry','Linsensuppe','Linsen-Tacos','Linsen-Bolognese','Linsensalat Kräuter','Linsen-Bowl Süßkartoffel','Linsen-Burger','Dhal','Mujaddara','Grüne Linsen Spinat','Linsen-Tomaten-Pfanne']},
+  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🧆',col:'#d97706', items:['Kichererbsen-Curry','Falafel','Falafel-Wrap','Kichererbsen-Burger','Kichererbsen-Salat','Chana Masala','Buddha-Bowl','Marokk. Kichererbsen','Geröstete Kichererbsen','Kichererbsensuppe','Pasta e Ceci','Socca']},
   {g:'Kartoffelgerichte', tag:'Kartoffel',   emoji:'🥔', col:'#ca8a04', items:['Ofenkartoffeln','Kartoffelgratin','Bratkartoffeln','Kartoffel-Wedges','Smashed Potatoes','Kartoffelpüree','Kartoffelauflauf','Kartoffelsalat','Kartoffelpfanne','Gefüllte Ofenkartoffeln','Kartoffelsuppe']},
   {g:'Reisgerichte',     tag:'Reis',         emoji:'🍚', col:'#0891b2', items:['Reis Lauch-Curry','Reis Tofu','Reis Tomate Zucchini','Reis Brokkoli Karotten','Gebratener Reis','Reis Bohnen Mais','Reis Linsen','Risotto','Sushi-Bowl vegan','Kimchi-Reis']},
   {g:'Nudelgerichte',    tag:'Nudeln',       emoji:'🍝', col:'#c2410c', items:['Nudeln grünes Pesto','Nudeln Tomatensauce','Nudeln Bolognese','Nudeln Brokkoli','Nudeln Pilzsauce','Nudeln Spinat-Sahne','One-Pot-Pasta','Vegane Mac and Cheese','Ramen vegan']},
-  {g:'Gemüsegerichte',   tag:'Gemüse',       emoji:'🥦', col:'#16a34a', items:['Spitzkohl-Tofu-Pfanne','Brokkoli Knoblauch','Ofengemüse','Auberginen-Curry','Gefüllte Paprika','Ratatouille','Süßkartoffel-Curry','Gebackene Süßkartoffeln','Rosenkohl Sesam']},
-  {g:'Eintöpfe',         tag:'Eintopf',      emoji:'🍲', col:'#7c3aed', items:['Lasagne','Lasagnesuppe','Linseneintopf','Chili sin Carne','Gemüseeintopf','Tomaten-Linsen-Eintopf','Marokkanischer Eintopf']},
-  {g:'Teiggerichte',     tag:'Teig',         emoji:'🫓', col:'#b45309', items:['Pfannkuchen','Pizza','Wraps','Flammkuchen','Quesadillas','Burger']},
-  {g:'Saucen & Beilagen',tag:'Sauce',        emoji:'🫙', col:'#be185d', items:['Pilzsauce','Tomatensauce','Curry-Sauce','Grünes Pesto','Bolognese','Guacamole','Tahini-Sauce','Harissa']},
+  {g:'Gemüsegerichte',   tag:'Gemüse',       emoji:'🥬', col:'#16a34a', items:['Spitzkohl-Tofu-Pfanne','Brokkoli Knoblauch','Ofengemüse','Auberginen-Curry','Gefüllte Paprika','Ratatouille','Süßkartoffel-Curry','Gebackene Süßkartoffeln','Rosenkohl Sesam']},
+  {g:'Eintöpfe',         tag:'Eintopf',      emoji:'🫕', col:'#7c3aed', items:['Lasagne','Lasagnesuppe','Linseneintopf','Chili sin Carne','Gemüseeintopf','Tomaten-Linsen-Eintopf','Marokkanischer Eintopf']},
+  {g:'Teiggerichte',     tag:'Teig',         emoji:'🍕', col:'#b45309', items:['Pfannkuchen','Pizza','Wraps','Flammkuchen','Quesadillas','Burger']},
+  {g:'Saucen & Beilagen',tag:'Sauce',        emoji:'🥫', col:'#be185d', items:['Pilzsauce','Tomatensauce','Curry-Sauce','Grünes Pesto','Bolognese','Guacamole','Tahini-Sauce','Harissa']},
 ];
 
 // MULTI-API KI
@@ -858,7 +858,13 @@ function exportNotes(){
 // MODALS
 function openM(id){const m=document.getElementById(id);if(m)m.classList.add('on');}
 function closeM(id){const m=document.getElementById(id);if(m)m.classList.remove('on');}
-function openPlanty(){openM('m-planty');renderAPIPills();if(!kiH.length)addKM('asst','Hi! 🌱 Ich bin Planty — dein veganer Gesundheits-Assistent. Was möchtest du wissen?');}
+function openPlanty(){
+  openM('m-planty');
+  renderAPIPills();
+  if(!kiH.length)addKM('asst','Hi! 🌱 Ich bin Planty — dein veganer Gesundheits-Assistent. Was möchtest du wissen?');
+  const m=document.querySelector('#m-planty .modal');
+  if(m){m.style.height=Math.round(window.innerHeight*.72)+'px';m.style.maxHeight='98vh';}
+}
 document.querySelectorAll('.mbg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('on');}));
 
 // BIND ALL
@@ -915,10 +921,10 @@ function bindAll(){
   const handle=document.querySelector('#m-planty .mh');
   let startY=0,startH=0,dragging=false;
   handle.addEventListener('touchstart',e=>{dragging=true;startY=e.touches[0].clientY;startH=plantyModal.offsetHeight;},{passive:true});
-  handle.addEventListener('touchmove',e=>{if(!dragging)return;const dy=startY-e.touches[0].clientY;const newH=Math.min(Math.max(startH+dy,300),window.innerHeight*.95);plantyModal.style.maxHeight=newH+'px';plantyModal.style.height=newH+'px';},{passive:true});
+  handle.addEventListener('touchmove',e=>{if(!dragging)return;const dy=startY-e.touches[0].clientY;const newH=Math.min(Math.max(startH+dy,260),window.innerHeight*.98);plantyModal.style.maxHeight=newH+'px';plantyModal.style.height=newH+'px';},{passive:true});
   handle.addEventListener('touchend',()=>{dragging=false;});
   handle.addEventListener('mousedown',e=>{dragging=true;startY=e.clientY;startH=plantyModal.offsetHeight;e.preventDefault();});
-  document.addEventListener('mousemove',e=>{if(!dragging)return;const dy=startY-e.clientY;const newH=Math.min(Math.max(startH+dy,300),window.innerHeight*.95);plantyModal.style.maxHeight=newH+'px';plantyModal.style.height=newH+'px';});
+  document.addEventListener('mousemove',e=>{if(!dragging)return;const dy=startY-e.clientY;const newH=Math.min(Math.max(startH+dy,260),window.innerHeight*.98);plantyModal.style.maxHeight=newH+'px';plantyModal.style.height=newH+'px';});
   document.addEventListener('mouseup',()=>{dragging=false;});
 }
 
