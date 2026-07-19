@@ -556,16 +556,61 @@ DB.laborwerte=[{id:'lb1',col:'#6d28d9',lbl:'Referenz',title:'Optimale Laborwerte
 const ALL=Object.values(DB).flat();
 
 const FG=[
-  {g:'Tofu-Gerichte',    tag:'Tofu',        emoji:'🍱', col:'#dc2626', items:['Gebratener Tofu Gemüse','Tofu-Tacos','Tofu-Curry','Tofu-Salat Sesam','Tofu-Ramen','Tofu-Bowl Reis','Tofu-Wrap','Tofu-Bolognese','Tofu-Pfanne Brokkoli','Mapo Tofu vegan','Tofu-Scramble','Tofu Erdnusssauce','Tofu-Spieße','Palak Tofu','Tofu-Gyros']},
-  {g:'Linsengerichte',   tag:'Linsen',       emoji:'🫘', col:'#16a34a', items:['Roter Linseneintopf','Rotes Linsen-Curry','Linsensuppe','Linsen-Tacos','Linsen-Bolognese','Linsensalat Kräuter','Linsen-Bowl Süßkartoffel','Linsen-Burger','Dhal','Mujaddara','Grüne Linsen Spinat','Linsen-Tomaten-Pfanne']},
-  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🧆',col:'#d97706', items:['Kichererbsen-Curry','Falafel','Falafel-Wrap','Kichererbsen-Burger','Kichererbsen-Salat','Chana Masala','Buddha-Bowl','Marokk. Kichererbsen','Geröstete Kichererbsen','Kichererbsensuppe','Pasta e Ceci','Socca']},
-  {g:'Kartoffelgerichte', tag:'Kartoffel',   emoji:'🥔', col:'#ca8a04', items:['Ofenkartoffeln','Kartoffelgratin','Bratkartoffeln','Kartoffel-Wedges','Smashed Potatoes','Kartoffelpüree','Kartoffelauflauf','Kartoffelsalat','Kartoffelpfanne','Gefüllte Ofenkartoffeln','Kartoffelsuppe']},
-  {g:'Reisgerichte',     tag:'Reis',         emoji:'🍚', col:'#0891b2', items:['Reis Lauch-Curry','Reis Tofu','Reis Tomate Zucchini','Reis Brokkoli Karotten','Gebratener Reis','Reis Bohnen Mais','Reis Linsen','Risotto','Sushi-Bowl vegan','Kimchi-Reis']},
-  {g:'Nudelgerichte',    tag:'Nudeln',       emoji:'🍝', col:'#c2410c', items:['Nudeln grünes Pesto','Nudeln Tomatensauce','Nudeln Bolognese','Nudeln Brokkoli','Nudeln Pilzsauce','Nudeln Spinat-Sahne','One-Pot-Pasta','Vegane Mac and Cheese','Ramen vegan']},
-  {g:'Gemüsegerichte',   tag:'Gemüse',       emoji:'🥬', col:'#16a34a', items:['Spitzkohl-Tofu-Pfanne','Brokkoli Knoblauch','Ofengemüse','Auberginen-Curry','Gefüllte Paprika','Ratatouille','Süßkartoffel-Curry','Gebackene Süßkartoffeln','Rosenkohl Sesam']},
-  {g:'Eintöpfe',         tag:'Eintopf',      emoji:'🫕', col:'#7c3aed', items:['Lasagne','Lasagnesuppe','Linseneintopf','Chili sin Carne','Gemüseeintopf','Tomaten-Linsen-Eintopf','Marokkanischer Eintopf']},
-  {g:'Teiggerichte',     tag:'Teig',         emoji:'🍕', col:'#b45309', items:['Pfannkuchen','Pizza','Wraps','Flammkuchen','Quesadillas','Burger']},
-  {g:'Saucen & Beilagen',tag:'Sauce',        emoji:'🥫', col:'#be185d', items:['Pilzsauce','Tomatensauce','Curry-Sauce','Grünes Pesto','Bolognese','Guacamole','Tahini-Sauce','Harissa']},
+  {g:'Tofu-Gerichte',    tag:'Tofu',        emoji:'🍱', col:'#dc2626', items:[
+    {n:'Gebratener Tofu Gemüse',e:'🥢'},{n:'Tofu-Tacos',e:'🌮'},{n:'Tofu-Curry',e:'🍛'},
+    {n:'Tofu-Salat Sesam',e:'🥗'},{n:'Tofu-Ramen',e:'🍜'},{n:'Tofu-Bowl Reis',e:'🍱'},
+    {n:'Tofu-Wrap',e:'🌯'},{n:'Tofu-Bolognese',e:'🍝'},{n:'Tofu-Pfanne Brokkoli',e:'🥦'},
+    {n:'Mapo Tofu vegan',e:'🌶️'},{n:'Tofu-Scramble',e:'🍳'},{n:'Tofu Erdnusssauce',e:'🥜'},
+    {n:'Tofu-Spieße',e:'🍢'},{n:'Palak Tofu',e:'🌿'},{n:'Tofu-Gyros',e:'🫓'},
+  ]},
+  {g:'Linsengerichte',   tag:'Linsen',       emoji:'🫘', col:'#16a34a', items:[
+    {n:'Roter Linseneintopf',e:'🍲'},{n:'Rotes Linsen-Curry',e:'🍛'},{n:'Linsensuppe',e:'🥣'},
+    {n:'Linsen-Tacos',e:'🌮'},{n:'Linsen-Bolognese',e:'🍝'},{n:'Linsensalat Kräuter',e:'🥗'},
+    {n:'Linsen-Bowl Süßkartoffel',e:'🍠'},{n:'Linsen-Burger',e:'🍔'},{n:'Dhal',e:'🫕'},
+    {n:'Mujaddara',e:'🍚'},{n:'Grüne Linsen Spinat',e:'🌿'},{n:'Linsen-Tomaten-Pfanne',e:'🍅'},
+  ]},
+  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',emoji:'🧆',col:'#d97706', items:[
+    {n:'Kichererbsen-Curry',e:'🍛'},{n:'Falafel',e:'🧆'},{n:'Falafel-Wrap',e:'🌯'},
+    {n:'Kichererbsen-Burger',e:'🍔'},{n:'Kichererbsen-Salat',e:'🥗'},{n:'Chana Masala',e:'🫕'},
+    {n:'Buddha-Bowl',e:'🥙'},{n:'Marokk. Kichererbsen',e:'🫙'},{n:'Geröstete Kichererbsen',e:'🫘'},
+    {n:'Kichererbsensuppe',e:'🥣'},{n:'Pasta e Ceci',e:'🍝'},{n:'Socca',e:'🥞'},
+  ]},
+  {g:'Kartoffelgerichte', tag:'Kartoffel',   emoji:'🥔', col:'#ca8a04', items:[
+    {n:'Ofenkartoffeln',e:'🥔'},{n:'Kartoffelgratin',e:'🫕'},{n:'Bratkartoffeln',e:'🍳'},
+    {n:'Kartoffel-Wedges',e:'🍟'},{n:'Smashed Potatoes',e:'🥔'},{n:'Kartoffelpüree',e:'🥣'},
+    {n:'Kartoffelauflauf',e:'🫕'},{n:'Kartoffelsalat',e:'🥗'},{n:'Kartoffelpfanne',e:'🍳'},
+    {n:'Gefüllte Ofenkartoffeln',e:'🧀'},{n:'Kartoffelsuppe',e:'🥣'},
+  ]},
+  {g:'Reisgerichte',     tag:'Reis',         emoji:'🍚', col:'#0891b2', items:[
+    {n:'Reis Lauch-Curry',e:'🍛'},{n:'Reis Tofu',e:'🍱'},{n:'Reis Tomate Zucchini',e:'🍅'},
+    {n:'Reis Brokkoli Karotten',e:'🥦'},{n:'Gebratener Reis',e:'🍳'},{n:'Reis Bohnen Mais',e:'🌽'},
+    {n:'Reis Linsen',e:'🫘'},{n:'Risotto',e:'🍚'},{n:'Sushi-Bowl vegan',e:'🍣'},
+    {n:'Kimchi-Reis',e:'🌶️'},
+  ]},
+  {g:'Nudelgerichte',    tag:'Nudeln',       emoji:'🍝', col:'#c2410c', items:[
+    {n:'Nudeln grünes Pesto',e:'🌿'},{n:'Nudeln Tomatensauce',e:'🍅'},{n:'Nudeln Bolognese',e:'🍝'},
+    {n:'Nudeln Brokkoli',e:'🥦'},{n:'Nudeln Pilzsauce',e:'🍄'},{n:'Nudeln Spinat-Sahne',e:'🥬'},
+    {n:'One-Pot-Pasta',e:'🫕'},{n:'Vegane Mac and Cheese',e:'🧀'},{n:'Ramen vegan',e:'🍜'},
+  ]},
+  {g:'Gemüsegerichte',   tag:'Gemüse',       emoji:'🥬', col:'#16a34a', items:[
+    {n:'Spitzkohl-Tofu-Pfanne',e:'🥬'},{n:'Brokkoli Knoblauch',e:'🥦'},{n:'Ofengemüse',e:'🫕'},
+    {n:'Auberginen-Curry',e:'🍆'},{n:'Gefüllte Paprika',e:'🫑'},{n:'Ratatouille',e:'🍅'},
+    {n:'Süßkartoffel-Curry',e:'🍛'},{n:'Gebackene Süßkartoffeln',e:'🍠'},{n:'Rosenkohl Sesam',e:'🌰'},
+  ]},
+  {g:'Eintöpfe',         tag:'Eintopf',      emoji:'🫕', col:'#7c3aed', items:[
+    {n:'Lasagne',e:'🫕'},{n:'Lasagnesuppe',e:'🥣'},{n:'Linseneintopf',e:'🍲'},
+    {n:'Chili sin Carne',e:'🌶️'},{n:'Gemüseeintopf',e:'🥕'},{n:'Tomaten-Linsen-Eintopf',e:'🍅'},
+    {n:'Marokkanischer Eintopf',e:'🏺'},
+  ]},
+  {g:'Teiggerichte',     tag:'Teig',         emoji:'🍕', col:'#b45309', items:[
+    {n:'Pfannkuchen',e:'🥞'},{n:'Pizza',e:'🍕'},{n:'Wraps',e:'🌯'},
+    {n:'Flammkuchen',e:'🫓'},{n:'Quesadillas',e:'🫔'},{n:'Burger',e:'🍔'},
+  ]},
+  {g:'Saucen & Beilagen',tag:'Sauce',        emoji:'🥫', col:'#be185d', items:[
+    {n:'Pilzsauce',e:'🍄'},{n:'Tomatensauce',e:'🍅'},{n:'Curry-Sauce',e:'🍛'},
+    {n:'Grünes Pesto',e:'🌿'},{n:'Bolognese',e:'🍝'},{n:'Guacamole',e:'🥑'},
+    {n:'Tahini-Sauce',e:'🫙'},{n:'Harissa',e:'🌶️'},
+  ]},
 ];
 
 // MULTI-API KI
@@ -680,7 +725,7 @@ function doSearch(q){
   CT='search';
   const hR=ALL.map(e=>({e,s:scH(e,toks)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
   const dishes=lD();
-  const allF=[...FG.flatMap(g=>g.items.map(n=>({n,g:g.g,tag:g.tag}))), ...dishes.map(d=>({n:d.n,g:d.cat||'Eigene',tag:'Eigene',custom:true,notes:d.notes||''}))];
+  const allF=[...FG.flatMap(g=>g.items.map(it=>({n:it.n,e:it.e,col:g.col,g:g.g,tag:g.tag}))), ...dishes.map(d=>({n:d.n,e:'⭐',col:'#2563eb',g:d.cat||'Eigene',tag:'Eigene',custom:true,notes:d.notes||''}))];
   const fR=allF.map(f=>({f,s:tok(q).reduce((s,t)=>{if(nm(f.n).includes(t))s+=10;if(nm(f.g).includes(t))s+=4;return s;},0)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
   const tot=hR.length+fR.length;
   const st=document.getElementById('srch-stats');if(st)st.textContent=tot?tot+' Treffer für „'+q+'"':'';
@@ -689,7 +734,7 @@ function doSearch(q){
   else{
     if(hR.length){html+='<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 16px 5px">Gesundheit ('+hR.length+')</div>';html+=hR.map((x,i)=>buildEC(x.e,'sr'+i,toks)).join('');}
     if(fR.length){html+='<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 16px 5px">Gerichte ('+fR.length+')</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 16px">';
-      fR.forEach(({f})=>{html+='<div class="fc'+(f.custom?' cust':'')+'" data-fn="'+esc(f.n)+'" data-fg="'+esc(f.g)+'" data-fc="'+(f.custom?'1':'0')+'" data-fnotes="'+esc(f.notes||'')+'">'+'<div class="fc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg></div><div class="fc-nm">'+hl(f.n,toks)+'</div><div class="fc-tg">'+esc(f.g)+'</div></div>';});
+      fR.forEach(({f})=>{html+='<div class="fc'+(f.custom?' cust':'')+'" data-fn="'+esc(f.n)+'" data-fg="'+esc(f.g)+'" data-fc="'+(f.custom?'1':'0')+'" data-fnotes="'+esc(f.notes||'')+'">'+'<div class="fc-ic" style="background:'+(f.col||'#2563eb')+'20;font-size:18px">'+f.e+'</div><div class="fc-nm">'+hl(f.n,toks)+'</div><div class="fc-tg">'+esc(f.g)+'</div></div>';});
       html+='</div>';}
   }
   const sl=document.getElementById('srch-list');if(sl){sl.innerHTML=html;bindFoodCards(sl);bindECHeads(sl);}
@@ -811,7 +856,7 @@ function renderFoodList(){
   FG.forEach(g=>{
     if(FF&&FF!=='Eigene'&&g.tag!==FF)return;
     html+='<div class="fg"><div class="fg-h"><div class="fg-ic" style="background:'+g.col+'20;color:'+g.col+';font-size:16px;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center">'+g.emoji+'</div><span class="fg-nm">'+g.g+'</span><span class="fg-cnt">'+g.items.length+'</span></div><div class="fg-grid">';
-    g.items.forEach(n=>{html+='<div class="fc" data-fn="'+esc(n)+'" data-fg="'+esc(g.g)+'" data-fc="0" data-fnotes=""><div class="fc-ic" style="background:'+g.col+'20;font-size:18px;color:'+g.col+'">'+g.emoji+'</div><div class="fc-nm">'+esc(n)+'</div></div>';});
+    g.items.forEach(it=>{html+='<div class="fc" data-fn="'+esc(it.n)+'" data-fg="'+esc(g.g)+'" data-fc="0" data-fnotes=""><div class="fc-ic" style="background:'+g.col+'20;font-size:18px">'+it.e+'</div><div class="fc-nm">'+esc(it.n)+'</div></div>';});
     html+='</div></div>';
   });
   el.innerHTML=html||'<div class="empty"><div class="et">Keine Gerichte</div></div>';
