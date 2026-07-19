@@ -77,15 +77,12 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .widget-value{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
 .widget-unit{font-size:11px;font-weight:700;color:var(--text3)}
 .widget-sub{font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;line-height:1.3}
-#w-time{font-size:22px!important}
 .widget-bar-wrap{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:6px}
 .widget-bar{height:100%;border-radius:99px;background:var(--a);width:30%;transition:width .8s ease,background .5s}
 .widget-foot{font-size:9px;color:var(--text3);font-weight:600}
 .sr-calm .widget-bar{background:#22c55e}.sr-calm .widget-value{color:#16a34a}
 .sr-elevated .widget-bar{background:#f59e0b}.sr-elevated .widget-value{color:#d97706}
 .sr-high .widget-bar{background:#ef4444}.sr-high .widget-value{color:#dc2626}
-.widget-time{background:linear-gradient(135deg,var(--a),var(--ad))}
-.widget-time .widget-label,.widget-time .widget-value,.widget-time .widget-sub,.widget-time .widget-foot{color:rgba(255,255,255,.9)}
 .widget-add-mini{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;align-self:center;transition:all .15s;background:var(--bg3)}
 .widget-add-mini:active{border-color:var(--a);color:var(--a);transform:scale(.92)}
 /* Home Kategorien */
@@ -346,15 +343,7 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
       <div class="widget-foot" id="sr-kp">Kp: –</div>
     </div>
 
-    <!-- UHRZEIT WIDGET -->
-    <div class="widget widget-time">
-      <div class="widget-label">🕐 Jetzt</div>
-      <div class="widget-main">
-        <span class="widget-value" id="w-time" style="font-size:26px"></span>
-      </div>
-      <div class="widget-sub" id="w-date"></div>
-      <div class="widget-foot" id="w-utc"></div>
-    </div>
+
 
     <!-- PLACEHOLDER -->
     <div class="widget-add-mini" id="widget-add-btn" title="Widget hinzufügen">
@@ -1211,7 +1200,7 @@ function goTab(id){
   });
   const af=document.getElementById('afab');if(af)af.classList.toggle('on',id==='food');
   CT=id;
-  if(id==='home'){renderFavs();renderRecs();renderHomeCats();startClock();}
+  if(id==='home'){renderFavs();renderRecs();renderHomeCats();}
   if(id==='health')renderCatGrid();
   if(id==='food')renderFood();
   if(id==='plants')renderPlants();
@@ -1762,19 +1751,6 @@ async function loadSchumannWidget(){
   }
 }
 
-function startClock(){
-  function tick(){
-    const now=new Date();
-    const t=document.getElementById('w-time');
-    const d=document.getElementById('w-date');
-    const u=document.getElementById('w-utc');
-    if(t)t.textContent=now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-    if(d)d.textContent=now.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'short'});
-    if(u)u.textContent='UTC '+new Date().toLocaleTimeString('en-GB',{timeZone:'UTC',hour:'2-digit',minute:'2-digit'});
-  }
-  tick();
-  setInterval(tick,1000);
-}
 
 function renderHomeCats(){
   const el=document.getElementById('home-cats');
@@ -1805,7 +1781,6 @@ renderRecs();
 renderHomeCats();
 loadSchumannWidget();
 setInterval(loadSchumannWidget,5*60*1000);
-startClock();
 goTab('home');
 </script>
 </body></html>
