@@ -303,7 +303,7 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
 <div id="app">
 <div class="topbar">
   <div class="tb1">
-    <div class="tb-logo">
+    <div class="tb-logo" id="tb-logo" style="cursor:pointer">
       <div class="tb-li"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
       <div><div class="tb-ln">Planted</div><div class="tb-ls" id="tb-sub">Vegane Gesundheitsapp</div></div>
     </div>
@@ -1624,7 +1624,16 @@ function bindAll(){
   // Theme
   document.getElementById('btn-theme').addEventListener('click',toggleTheme);
   // Profile nav
-  document.getElementById('tb-user-avatar').addEventListener('click',()=>goTab('profile'));
+  document.getElementById('tb-logo').addEventListener('click',()=>{
+    const sub=document.getElementById('tb-sub');
+    if(sub){sub.textContent='Neu laden…';}
+    setTimeout(()=>location.reload(true),80);
+  });
+  document.getElementById('tb-user-avatar').addEventListener('click',()=>{
+    goTab('profile');
+    // Hintergrund-Refresh aller Widgets
+    setTimeout(()=>{loadSchumannWidget();loadLuftWidget();},200);
+  });
   // Planty
   document.getElementById('btn-planty').addEventListener('click',openPlanty);
   document.getElementById('mc-planty').addEventListener('click',()=>closeM('m-planty'));
