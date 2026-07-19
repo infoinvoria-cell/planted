@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Planted">
+<meta name="theme-color" id="tc" content="#ffffff">
+<title>Planted</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --bg:#f7f7f5;--bg2:#fff;--bg3:#f0f0ee;--card:#fff;
+  --border:#e8e8e5;--border2:#d0d0cc;
+  --text:#0f0f0e;--text2:#5a5a56;--text3:#a0a09c;
+  --a:#1a7c35;--ad:#136128;--ag:#1a7c3512;--al:#1a7c3520;
+  --red:#dc2626;--amber:#d97706;--blue:#2563eb;
+  --purple:#7c3aed;--teal:#059669;--orange:#c2410c;
+  --nh:68px;--sb:env(safe-area-inset-bottom,0px);--r:14px;
+}
+[data-theme="dark"]{
+  --bg:#080b08;--bg2:#0f130f;--bg3:#161c16;--card:#111511;
+  --border:#1c261c;--border2:#263326;
+  --text:#dff0df;--text2:#6a906a;--text3:#384838;
+  --a:#3db356;--ad:#2a9040;--ag:#3db35618;--al:#3db35628;
+  --red:#f87171;--amber:#fbbf24;--blue:#60a5fa;
+  --purple:#c084fc;--teal:#2dd4a0;--orange:#fb923c;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
+button{cursor:pointer;border:none;background:none;font-family:inherit;font-size:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+*{scrollbar-width:none}::-webkit-scrollbar{display:none}
+
+@media(min-width:600px){
+  html,body{background:#09090b!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:100vh!important;padding:0!important}
+  #shell{width:393px;height:852px;border-radius:55px;position:relative;overflow:hidden;flex-shrink:0;
+    box-shadow:0 0 0 1px #222,0 0 0 3.5px #111,0 60px 160px rgba(0,0,0,.95)}
+  #shell::before{content:'';position:absolute;left:-3.5px;top:130px;width:3.5px;height:32px;background:#1c1c1c;border-radius:3px 0 0 3px;box-shadow:0 46px 0 #1c1c1c,0 92px 0 #1c1c1c;z-index:300}
+  #shell::after{content:'';position:absolute;right:-3.5px;top:170px;width:3.5px;height:68px;background:#1c1c1c;border-radius:0 3px 3px 0;z-index:300}
+  .di{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:124px;height:36px;background:#000;border-radius:20px;z-index:200;display:flex;align-items:center;justify-content:center;gap:10px}
+  .di-c{width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #0a0a0a}
+  .di-s{width:8px;height:8px;border-radius:50%;background:#0a1a0a;box-shadow:0 0 5px rgba(61,179,86,.5)}
+  #app{height:852px!important;border-radius:55px!important;overflow:hidden!important;position:relative!important}
+  .topbar{padding-top:56px!important;position:relative!important}
+  #nav{position:absolute!important;bottom:0!important;left:0!important;right:0!important;border-radius:0 0 54px 54px!important;padding-bottom:20px!important;z-index:60}
+  #afab{position:absolute!important;bottom:calc(var(--nh) + 20px)!important;right:16px!important;z-index:55}
+  .mbg{position:absolute!important;border-radius:55px!important;overflow:hidden!important}
+}
+@media(max-width:599px){#shell{display:contents}.di{display:none!important}}
+
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--bg)}
+#view{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch}
+.screen{display:none;min-height:100%;padding-bottom:calc(var(--nh) + 40px);background:var(--bg)}
+.screen.on{display:block}
+
+.topbar{padding:14px 16px 10px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.tb1{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.tb-logo{display:flex;align-items:center;gap:8px}
+.tb-li{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-li svg{width:18px;height:18px}
+.tb-ln{font-size:17px;font-weight:800;color:var(--a);letter-spacing:-.5px;line-height:1}
+.tb-ls{font-size:9px;color:var(--text3);font-weight:500}
+.tb-r{display:flex;align-items:center;gap:5px}
+.tb-upills{display:flex;gap:4px;margin-right:2px}
+.tb-ubtn{width:28px;height:28px;border-radius:50%;font-size:11px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;border:2.5px solid transparent;cursor:pointer;transition:all .15s}
+.icb{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.icb svg{width:15px;height:15px}
+.srch{position:relative}
+.si{width:100%;padding:9px 34px 9px 34px;border-radius:11px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13.5px;outline:none;transition:border-color .15s}
+.si:focus{border-color:var(--a);background:var(--bg2)}
+.si::placeholder{color:var(--text3)}
+.si-l{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);display:flex;pointer-events:none}
+.si-l svg{width:13px;height:13px}
+.si-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text3);display:none;background:none;border:none;cursor:pointer;line-height:1}
+.si-x.on{display:flex}
+.si-x svg{width:13px;height:13px}
+
+#nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:60;padding-bottom:var(--sb)}
+.nav-in{display:flex;align-items:center;height:var(--nh)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;color:var(--text3);font-size:9px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;border:none;background:none;transition:color .15s}
+.ni svg{width:21px;height:21px;transition:transform .15s}
+.ni.on{color:var(--a)}
+.ni.on svg{transform:scale(1.08)}
+.nav-mid{flex:0 0 68px;display:flex;align-items:center;justify-content:center}
+.nfab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--ad));box-shadow:0 4px 18px rgba(26,124,53,.4);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:transform .15s}
+.nfab:active{transform:scale(.92)}
+.nfab svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round}
+
+.sl{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px}
+.sl-t{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.sl-a{font-size:11px;color:var(--a);font-weight:600;cursor:pointer}
+
+.hero{margin:10px 16px 4px;background:linear-gradient(135deg,var(--a),var(--ad));border-radius:16px;padding:16px 16px 14px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero-lbl{font-size:10px;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
+.hero-txt{font-size:12.5px;color:rgba(255,255,255,.92);font-weight:500;line-height:1.55}
+.hero-leaf{position:absolute;bottom:8px;right:14px;opacity:.18}
+.hero-leaf svg{width:42px;height:42px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round}
+
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:4px 16px 0}
+.qa-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;cursor:pointer}
+.qa-item:active .qa-ic{transform:scale(.88);opacity:.8}
+.qa-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;transition:transform .15s;border:1px solid transparent}
+.qa-ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.qa-lb{font-size:9.5px;font-weight:600;color:var(--text2);text-align:center}
+
+.fav-strip{display:flex;gap:7px;overflow-x:auto;padding:0 16px 4px}
+.fav-pill{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;background:var(--card);border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:border-color .15s}
+.fav-pill:active{border-color:var(--a)}
+.fav-pill svg{width:11px;height:11px}
+.fav-pill-nm{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap}
+
+.rec-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px}
+.ri{flex-shrink:0;width:88px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;transition:border-color .15s}
+.ri:active{border-color:var(--a)}
+.ri-ic{width:30px;height:30px;border-radius:8px;background:var(--bg3);margin:0 auto 5px;display:flex;align-items:center;justify-content:center;color:var(--a)}
+.ri-ic svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.ri-nm{font-size:10px;font-weight:600;color:var(--text);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ri-cat{font-size:9px;color:var(--text3);margin-top:2px}
+
+.lcard{margin:0 16px 6px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.lrow{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.lrow:last-child{border-bottom:none}
+.lrow:active{background:var(--bg3)}
+.lr-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid transparent}
+.lr-ic svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.lr-inf{flex:1;min-width:0}
+.lr-t{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px}
+.lr-s{font-size:10px;color:var(--text3)}
+.lr-chev{color:var(--text3);display:flex;align-items:center;flex-shrink:0}
+.lr-chev svg{width:13px;height:13px}
+
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 11px;cursor:pointer;border-left:3px solid var(--cc,var(--a));transition:background .12s;display:flex;align-items:center;gap:9px}
+.cat-card:active{background:var(--bg3)}
+.cat-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cat-ic svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.cat-nm{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:2px}
+.cat-sub{font-size:9.5px;color:var(--text3)}
+
+.cat-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px 8px}
+.ch-back{display:flex;align-items:center;cursor:pointer;color:var(--a);padding:4px;border:none;background:none}
+.ch-back svg{width:20px;height:20px}
+.ch-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ch-ico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ch-ttl{font-size:15px;font-weight:800;flex:1;letter-spacing:-.3px}
+.ch-cnt{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 7px;border-radius:99px;font-weight:600}
+
+.ec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin:0 16px 7px;overflow:hidden;border-left:3px solid var(--ecc,var(--a))}
+.ec-head{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;cursor:pointer;user-select:none}
+.ec-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ec-ico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ec-inf{flex:1;min-width:0}
+.ec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.3px;font-weight:700;margin-bottom:2px}
+.ec-ttl{font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px}
+.ec-pre{font-size:11px;color:var(--text2);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ec-r{display:flex;align-items:center;gap:4px;flex-shrink:0;margin-top:1px}
+.ec-star{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;color:var(--text3)}
+.ec-star.on{color:var(--amber)}
+.ec-star svg{width:15px;height:15px}
+.ec-chev{color:var(--text3);display:flex;align-items:center}
+.ec-chev svg{width:11px;height:11px}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 16px 2px}
+.chip{flex-shrink:0;padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11.5px;font-weight:600;white-space:nowrap;cursor:pointer;transition:all .12s}
+.chip.on{background:var(--al);border-color:var(--a);color:var(--a)}
+.fg{margin-bottom:4px}
+.fg-h{display:flex;align-items:center;gap:7px;padding:12px 16px 7px}
+.fg-ic{width:26px;height:26px;border-radius:7px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.fg-ic svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.fg-nm{font-size:13px;font-weight:700;color:var(--text)}
+.fg-cnt{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 7px;border-radius:99px;margin-left:auto;font-weight:600}
+.fg-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 16px}
+.fc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px;cursor:pointer;transition:all .12s}
+.fc:active{border-color:var(--a);background:var(--ag)}
+.fc.cust{border-style:dashed;border-color:var(--a)}
+.fc-ic{width:30px;height:30px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin-bottom:6px;color:var(--text2)}
+.fc-ic svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.fc-nm{font-size:11.5px;font-weight:600;color:var(--text);line-height:1.3}
+.fc-tg{font-size:9.5px;color:var(--text3);margin-top:2px}
+
+.ph-card{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.ph-av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:9px;border:3px solid var(--border2)}
+.ph-nm{font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:2px}
+.ph-sub{font-size:11px;color:var(--text3)}
+.slist{margin:0 16px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.srow:last-child{border-bottom:none}
+.srow:active{background:var(--bg3)}
+.srl{display:flex;align-items:center;gap:8px}
+.sric{width:28px;height:28px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.sric svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.srnm{font-size:13px;font-weight:600;color:var(--text)}
+.srsb{font-size:10px;color:var(--text3);margin-top:1px}
+.srv{color:var(--text3);display:flex;align-items:center}
+.srv svg{width:13px;height:13px}
+.tpill{width:44px;height:24px;border-radius:12px;background:var(--border2);border:none;position:relative;transition:background .2s;cursor:pointer;flex-shrink:0}
+.tpill.on{background:var(--a)}
+.tpill::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px #0002}
+.tpill.on::after{left:23px}
+
+.nc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin:0 16px 8px;overflow:hidden}
+.nc-in{padding:12px 13px}
+.nc-badge{font-size:9px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:2px 7px;border-radius:99px;display:inline-block;margin-bottom:3px}
+.nc-ttl{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.nc-src{font-size:10px;color:var(--text3);margin-bottom:4px}
+.nc-body{font-size:11.5px;color:var(--text2);line-height:1.6;white-space:pre-wrap}
+.nc-ts{font-size:9px;color:var(--text3);margin-top:6px}
+.nc-del{padding:4px;color:var(--text3);line-height:1;float:right;border:none;background:none;cursor:pointer}
+.nc-del svg{width:13px;height:13px}
+
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;backdrop-filter:blur(4px)}
+.mbg.on{display:flex}
+.modal{background:var(--bg2);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + var(--sb));width:100%;max-height:88vh;overflow-y:auto;position:relative}
+.mh{width:32px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 14px}
+.modal-t{font-size:16px;font-weight:800;margin-bottom:13px}
+.mcl{position:absolute;top:16px;right:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--text2);font-weight:600;cursor:pointer;border:none}
+.fl{font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:4px;display:block;font-weight:700}
+.fi{width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13.5px;outline:none;margin-bottom:11px;transition:border-color .15s;display:block}
+.fi:focus{border-color:var(--a);background:var(--bg2)}
+select.fi{appearance:none}
+textarea.fi{min-height:80px;resize:vertical;line-height:1.6}
+.btn-p{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:block;margin-top:2px}
+.btn-del{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--red);font-size:12px;padding:5px 0;margin-top:5px;font-weight:600;cursor:pointer}
+.btn-del svg{width:13px;height:13px}
+
+.ki-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ki-av svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round}
+.ki-msgs{min-height:100px;max-height:260px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:6px}
+.km{padding:9px 12px;border-radius:13px;font-size:12px;line-height:1.6;max-width:88%;white-space:pre-wrap}
+.km.user{background:var(--a);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.km.asst{background:var(--bg3);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.km.sys{background:var(--bg3);color:var(--text2);font-size:11px}
+.ki-row{display:flex;gap:7px;margin-top:2px}
+.ki-in{flex:1;padding:10px 12px;border-radius:11px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:13px;outline:none}
+.ki-in:focus{border-color:var(--a)}
+.ki-send{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex-shrink:0}
+.ki-send svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.ap{padding:3px 8px;border-radius:99px;font-size:9px;font-weight:700;border:1px solid var(--border);color:var(--text3);background:var(--bg3);display:inline-block}
+.ap.live{border-color:var(--a);color:var(--a);background:var(--ag)}
+
+#afab{position:fixed;bottom:calc(var(--nh) + var(--sb) + 12px);right:16px;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;border:none;border-radius:99px;padding:10px 14px;font-size:12px;font-weight:700;display:none;align-items:center;gap:5px;box-shadow:0 3px 16px rgba(26,124,53,.3);z-index:50;cursor:pointer}
+#afab.on{display:flex}
+#afab svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty svg{width:32px;height:32px;margin:0 auto 10px;display:block;opacity:.3}
+.et{font-size:14px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.es{font-size:12px;line-height:1.6}
+.nodata{padding:8px 16px;font-size:12px;color:var(--text3)}
+mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
+[data-theme="dark"] mark{background:#3db35622;color:#6ee68a}
+</style>
+</head>
+<body>
+<div id="shell">
+<div class="di"><div class="di-s"></div><div class="di-c"></div></div>
+<div id="app">
+<div class="topbar">
+  <div class="tb1">
+    <div class="tb-logo">
+      <div class="tb-li"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
+      <div><div class="tb-ln">Planted</div><div class="tb-ls" id="tb-sub">Vegane Gesundheitsapp</div></div>
+    </div>
+    <div class="tb-r">
+      <button class="icb" id="btn-theme"><svg id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button id="tb-user-avatar" style="width:34px;height:34px;border-radius:50%;font-size:13px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;border:2.5px solid transparent;background:linear-gradient(135deg,#1a7c35,#1a7c35aa)">J</button>
+    </div>
+  </div>
+  <div class="srch">
+    <span class="si-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input class="si" id="q" placeholder="Suchen: Aphthen, 528Hz, Kupfer, Miswak…" autocomplete="off" spellcheck="false">
+    <button class="si-x" id="si-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+</div>
+
+<div id="view">
+<!-- HOME -->
+<div class="screen on" id="s-home">
+  <div class="sl" id="fav-sl" style="display:none"><span class="sl-t">⭐ Meine Favoriten</span><span class="sl-a" id="fav-edit">Alle</span></div>
+  <div class="fav-strip" id="fav-strip"></div>
+  <div class="sl"><span class="sl-t">🕐 Zuletzt angesehen</span><span class="sl-a" id="rec-del">Löschen</span></div>
+  <div class="rec-scroll" id="rec-list"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px">
+    <div onclick="goTab('health')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;cursor:pointer;transition:background .12s">
+      <div style="width:36px;height:36px;border-radius:10px;background:#1a7c3520;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1a7c35" stroke-width="2" stroke-linecap="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </div>
+      <div style="font-size:15px;font-weight:800;margin-bottom:4px;color:var(--text)">Gesundheit</div>
+      <div style="font-size:11px;color:var(--text3)">Naturheilkunde · Frequenzen</div>
+    </div>
+    <div onclick="goTab('food')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;cursor:pointer;transition:background .12s">
+      <div style="width:36px;height:36px;border-radius:10px;background:#c2410c20;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"/></svg>
+      </div>
+      <div style="font-size:15px;font-weight:800;margin-bottom:4px;color:var(--text)">Gerichte</div>
+      <div style="font-size:11px;color:var(--text3)">Vegane Küche · Rezepte</div>
+    </div>
+    <div onclick="goTab('notes')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;cursor:pointer;transition:background .12s">
+      <div style="width:36px;height:36px;border-radius:10px;background:#7c3aed20;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div style="font-size:15px;font-weight:800;margin-bottom:4px;color:var(--text)">Notizen</div>
+      <div style="font-size:11px;color:var(--text3)">Ideen · Partner-Infos</div>
+    </div>
+    <div onclick="goTab('profile')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;cursor:pointer;transition:background .12s">
+      <div style="width:36px;height:36px;border-radius:10px;background:#2563eb20;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div style="font-size:15px;font-weight:800;margin-bottom:4px;color:var(--text)">Profil & KI</div>
+      <div style="font-size:11px;color:var(--text3)">Nutzer · Planty · APIs</div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTH -->
+<div class="screen" id="s-health">
+  <div class="sl"><span class="sl-t">🗂 Kategorien</span></div>
+  <div class="cat-grid" id="cat-grid"></div>
+</div>
+
+<!-- CAT DETAIL -->
+<div class="screen" id="s-cat">
+  <div class="cat-hdr">
+    <button class="ch-back" id="btn-catback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="ch-ico" id="ch-ico"></div>
+    <span class="ch-ttl" id="ch-ttl"></span>
+    <span class="ch-cnt" id="ch-cnt"></span>
+  </div>
+  <div id="cat-list"></div>
+</div>
+
+<!-- FOOD -->
+<div class="screen" id="s-food">
+  <div class="chips" id="food-chips"></div>
+  <div style="height:6px"></div>
+  <div id="food-list"></div>
+</div>
+
+<!-- NOTES -->
+<div class="screen" id="s-notes">
+  <div class="sl"><span class="sl-t">💡 Ideen & Neue Infos</span><span class="sl-a" id="btn-add-note">+ Notiz</span></div>
+  <div style="padding:0 16px 8px"><div style="background:var(--bg3);border-radius:11px;padding:10px 12px;border:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.6">💡 Sammle neue Erkenntnisse. Download als Bericht für das nächste Update-Gespräch.</div></div>
+  <div class="chips" id="note-chips">
+    <div class="chip on" data-ncat="">Alle</div>
+    <div class="chip" data-ncat="Tinktur">🍶 Tinkturen</div>
+    <div class="chip" data-ncat="Gericht">🍽️ Gerichte</div>
+    <div class="chip" data-ncat="Heilmittel">🌿 Heilmittel</div>
+    <div class="chip" data-ncat="Frequenz">🔊 Frequenzen</div>
+    <div class="chip" data-ncat="Idee">💡 Ideen</div>
+    <div class="chip" data-ncat="Sonstiges">📌 Sonstiges</div>
+  </div>
+  <div style="height:6px"></div>
+  <div id="notes-list"></div>
+  <div style="padding:10px 16px"><button id="btn-export-notes" style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--a);background:var(--al);color:var(--a);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Bericht herunterladen</button></div>
+</div>
+
+<!-- SEARCH -->
+<div class="screen" id="s-search">
+  <div id="srch-stats" style="font-size:10px;color:var(--text3);padding:8px 16px 3px;font-weight:700"></div>
+  <div id="srch-list"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="s-profile">
+  <div style="height:12px"></div>
+  <div class="ph-card"><div class="ph-av" id="ph-av"></div><div class="ph-nm" id="ph-nm"></div><div class="ph-sub">🌱 Planted Nutzer</div></div>
+  <div class="sl"><span class="sl-t">👤 Nutzer wechseln</span></div>
+  <div class="slist" id="profile-users"></div>
+  <div class="sl"><span class="sl-t">🤖 KI-Modelle</span></div>
+  <div class="slist" id="api-status"></div>
+  <div class="sl"><span class="sl-t">⚙️ Einstellungen</span></div>
+  <div class="slist">
+    <div class="srow" id="s-theme"><div class="srl"><div class="sric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div><div class="srnm">Dark Mode</div></div></div><button class="tpill" id="dm-pill"></button></div>
+    <div class="srow" id="s-export"><div class="srl"><div class="sric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div><div><div class="srnm">Daten exportieren</div><div class="srsb">JSON-Backup</div></div></div><div class="srv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="srow" id="s-netlify"><div class="srl"><div class="sric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div><div><div class="srnm">Online stellen</div><div class="srsb">Netlify — kostenlos</div></div></div><div class="srv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="srow" id="s-clear"><div class="srl"><div class="sric" style="color:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div><div><div class="srnm" style="color:var(--red)">Eigene Gerichte löschen</div></div></div></div>
+  </div>
+  <div class="sl"><span class="sl-t">ℹ️ App</span></div>
+  <div class="slist"><div class="srow" style="cursor:default"><div class="srl"><div class="sric"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/></svg></div><div><div class="srnm">Planted v4.1</div><div class="srsb">Vegan · Offline · Multi-User · 4 KI-APIs</div></div></div></div></div>
+</div>
+</div><!-- /view -->
+
+<nav id="nav"><div class="nav-in">
+  <button class="ni on" id="t-home" onclick="goTab('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Start</button>
+  <button class="ni" id="t-health" onclick="goTab('health')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>Gesundheit</button>
+  <div class="nav-mid"><button class="nfab" id="btn-planty"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><circle cx="8" cy="16" r="1" fill="white" stroke="none"/><circle cx="16" cy="16" r="1" fill="white" stroke="none"/></svg></button></div>
+  <button class="ni" id="t-food" onclick="goTab('food')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"/></svg>Gerichte</button>
+  <button class="ni" id="t-notes" onclick="goTab('notes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Notizen</button>
+</div></nav>
+
+<button id="afab"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Gericht</button>
+
+<!-- MODALS -->
+<div class="mbg" id="m-planty"><div class="modal">
+  <div class="mh"></div><button class="mcl" id="mc-planty">Schließen</button>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <div class="ki-av"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><circle cx="8" cy="16" r="1" fill="white" stroke="none"/><circle cx="16" cy="16" r="1" fill="white" stroke="none"/></svg></div>
+    <div><div style="font-size:15px;font-weight:800;color:var(--text)">Planty 🌱</div><div style="font-size:10px;color:var(--text3)">Dein veganer KI-Assistent</div></div>
+  </div>
+  <div id="api-pills" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px"></div>
+  <div class="ki-msgs" id="ki-msgs"></div>
+  <div class="ki-row"><input class="ki-in" id="ki-in" placeholder="Frag Planty…"><button class="ki-send" id="ki-send"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+</div></div>
+
+<div class="mbg" id="m-dish"><div class="modal">
+  <div class="mh"></div><button class="mcl" id="mc-dish">Schließen</button>
+  <div class="modal-t">🌱 Gericht hinzufügen</div>
+  <label class="fl">Name *</label><input class="fi" id="dish-nm" placeholder="z.B. Tofu Tikka Masala">
+  <label class="fl">Kategorie</label>
+  <select class="fi" id="dish-cat"><option>Tofu-Gerichte</option><option>Linsengerichte</option><option>Kichererbsen-Gerichte</option><option>Kartoffelgerichte</option><option>Reisgerichte</option><option>Nudelgerichte</option><option>Gemüsegerichte</option><option>Eintöpfe</option><option>Saucen</option><option>Eigene</option></select>
+  <label class="fl">Notizen</label><textarea class="fi" id="dish-notes" placeholder="Zutaten, Tipps…"></textarea>
+  <button class="btn-p" id="dish-save">Speichern</button>
+</div></div>
+
+<div class="mbg" id="m-det"><div class="modal">
+  <div class="mh"></div><button class="mcl" id="mc-det">Schließen</button>
+  <div id="det-body"></div>
+</div></div>
+
+<div class="mbg" id="m-note"><div class="modal">
+  <div class="mh"></div><button class="mcl" id="mc-note">Schließen</button>
+  <div class="modal-t">📝 Neue Notiz / Idee</div>
+  <label class="fl">Titel *</label><input class="fi" id="note-ttl" placeholder="z.B. Johanniskraut gegen Depression">
+  <label class="fl">Kategorie</label>
+  <select class="fi" id="note-cat"><option>Tinktur</option><option>Gericht</option><option>Heilmittel</option><option>Frequenz</option><option>Idee</option><option>Sonstiges</option></select>
+  <label class="fl">Quelle / Partner</label><input class="fi" id="note-src" placeholder="z.B. Hannah · Partner X">
+  <label class="fl">Details</label><textarea class="fi" id="note-body" placeholder="Beschreibung, Dosierung, Links…" style="min-height:90px"></textarea>
+  <label class="fl">Priorität</label>
+  <select class="fi" id="note-prio"><option value="high">🔴 Hoch — sofort einbauen</option><option value="mid" selected>🟡 Mittel — nächste Version</option><option value="low">🟢 Niedrig — irgendwann</option></select>
+  <button class="btn-p" id="note-save">Notiz speichern</button>
+</div></div>
+
+<div class="mbg" id="m-net"><div class="modal">
+  <div class="mh"></div><button class="mcl" id="mc-net">Schließen</button>
+  <div class="modal-t">🚀 Online stellen</div>
+  <div style="background:var(--bg3);border-radius:12px;padding:14px;font-size:12px;color:var(--text2);line-height:1.9;border:1px solid var(--border)"><strong style="color:var(--text)">Netlify (kostenlos):</strong><br>1. netlify.com → registrieren<br>2. "Add new site" → "Deploy manually"<br>3. Diese HTML-Datei reinziehen<br>4. URL: <strong style="color:var(--a)">planted-xyz.netlify.app</strong></div>
+</div></div>
+
+</div></div>
+
+<script>
+// USERS
+const USERS=[{id:'J',name:'J',col:'#1a7c35'},{id:'H',name:'H',col:'#7c3aed'},{id:'M',name:'M',col:'#c2410c'}];
+let CU=localStorage.getItem('pln_cu')||'J';
+const gU=()=>USERS.find(u=>u.id===CU)||USERS[0];
+
+// STORAGE
+const K=s=>'pln_'+s+'_'+CU;
+const Lg=k=>{try{return JSON.parse(localStorage.getItem(K(k)))||[];}catch{return[];}};
+const Ls=(k,v)=>localStorage.setItem(K(k),JSON.stringify(v));
+const lF=()=>Lg('f'),sF=v=>Ls('f',v);
+const lD=()=>Lg('d'),sD=v=>Ls('d',v);
+const lR=()=>Lg('r'),sR=v=>Ls('r',v);
+const lN=()=>Lg('n'),sN=v=>Ls('n',v);
+const isF=id=>lF().some(f=>f.id===id);
+function togF(id,name,cat){
+  let f=lF(),i=f.findIndex(x=>x.id===id);
+  if(i>=0)f.splice(i,1);else f.unshift({id,name,cat,ts:Date.now()});
+  sF(f);renderFavs();
+}
+function addR(item){let r=lR().filter(x=>x.id!==item.id);r.unshift(item);if(r.length>12)r=r.slice(0,12);sR(r);}
+
+// SUPABASE (background)
+let sb=null;
+try{sb=supabase.createClient('https://cuysjgfgdcyfednajnuk.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1eXNqZ2ZnZGN5ZmVkbmFqbnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDk4NTAsImV4cCI6MjEwMDAyNTg1MH0.aR1MOdBnbeVkkF9pFFEjlghgCR7H81CaKWZVsMRni-8');}catch(e){}
+
+// HEALTH DB
+const CATS=[
+  {id:'praxis',nm:'Praxisfälle',col:'#dc2626',p:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'},
+  {id:'frequenzen',nm:'Frequenzen',col:'#7c3aed',p:'M2 12h2l3-8 4 16 3-12 2 4h6'},
+  {id:'naehrstoffe',nm:'Nährstoffe',col:'#059669',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18'},
+  {id:'naturheilkunde',nm:'Naturheilkunde',col:'#1a7c35',p:'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10zM2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'},
+  {id:'entgiftung',nm:'Entgiftung',col:'#c2410c',p:'M3 6l9 6 9-6M3 12l9 6 9-6M12 2v2M12 20v2'},
+  {id:'kupfer',nm:'Kupfer & Wasser',col:'#d97706',p:'M12 2a10 10 0 1 0 10 10M12 8v4l3 3'},
+  {id:'zahnpflege',nm:'Zahnpflege',col:'#2563eb',p:'M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z'},
+  {id:'hormone',nm:'Hormone & Zyklus',col:'#be185d',p:'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4l3 3'},
+  {id:'energetisch',nm:'Energetisch & HRV',col:'#ca8a04',p:'M13 2 3 14h9l-1 8 10-12h-9l1-8z'},
+  {id:'natron',nm:'Natron & Hausmittel',col:'#4d7c0f',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18'},
+  {id:'aloe',nm:'Aloe Vera',col:'#10b981',p:'M7 20h10M10 20c5.5-2.5.8-6.4 3-10M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z'},
+  {id:'laborwerte',nm:'Laborwerte',col:'#6d28d9',p:'M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2M8.5 2h7'},
+];
+const DB={};
+DB.praxis=[
+  {id:'p1',col:'#dc2626',lbl:'Sofortprotokoll',title:'Aphthen — Lippen & Mund',tags:['aphthen','mund','b12','zink','sls','kokosöl','aloe'],body:`Schmerzhafte weiße Geschwüre innen an Lippen, Wangen, Zunge\n\nURSACHEN:\n① SLS in Zahnpasta → sofort wechseln!\n② B12-Mangel (vegan-kritisch)\n③ Eisenmangel Ferritin < 50\n④ Zinkmangel · Folsäuremangel\n⑤ Stress → Cortisol\n\nSOFORT:\n→ SLS-freie Zahnpasta (alverde Bio-Pfefferminze ✅)\n→ Kokosöl direkt auftupfen (antibakteriell)\n→ Aloe Vera Gel auftragen\n→ Natron-Paste 2 min auf Wunde\n→ Kurkuma-Paste (stark antibakteriell)\n→ Ölziehen morgens 10–15 min\n\nSUPPLEMENTS:\n• B12 sublingual 1000 µg (Methylcobalamin)\n• Zink 25 mg täglich · Folsäure 400 µg`},
+  {id:'p2',col:'#2563eb',lbl:'Sofortprotokoll',title:'Lymphknotenschwellung',tags:['lymphknoten','immunsystem','echinacea','ingwer'],body:`SOFORT:\n→ 2–2.5L Wasser täglich\n→ Trampolinspringen (Lymphpumpe!)\n→ Warme Kamille-Kompress\n→ Ingwer-Tee 3× täglich\n• Echinacea-Tinktur 20–30 Tr. 3×/Tag (max. 2 Wochen)\n• Vitamin C 500–1000 mg · Zink 15 mg\n\n⚠️ SOFORT ARZT:\nKnoten > 2cm · steinhart · wächst 2 Wochen\nGewichtsverlust · Nachtschweiß · Fieber > 3 Tage`},
+  {id:'p3',col:'#be185d',lbl:'Hormonal',title:'Akne Kinnbereich — PCOS',tags:['akne','kinn','pcos','androgene','spearmint','zink'],body:`SOFORT:\n→ Dairy & Zucker STOP\n→ Zink 30 mg täglich (anti-androgen)\n→ Spearmint-Tee 2 Tassen/Tag (RCT belegt!)\n→ Teebaumöl pur abends auf Pickel\n→ Niacinamide 10% Serum morgens\n\nWOCHEN 3–8:\n• DIM / I3C 200 mg\n• NAC 600 mg 2×/Tag\n• Myo-Inosit 2000 mg + D-Chiro-Inosit 50 mg\n• Berberine 500 mg 2×/Tag`},
+  {id:'p4',col:'#059669',lbl:'Schlaf',title:'Schlafprobleme — Einschlafen',tags:['schlaf','melatonin','magnesium','cortisol','3hz','delta'],body:`Frequenz: 3 Hz Delta-Wellen = Tiefschlaf\n\nABEND-ROUTINE:\n→ Kein Blaulicht ab 20 Uhr\n→ Magnesium Bisglycinat 400 mg (1h vor Schlaf)\n→ L-Theanin 200 mg\n→ Melatonin 0.3–0.5 mg (niedrig dosiert!)\n→ Schlafzimmer 17°C + dunkel\n→ Delta-Binaural-Beats 1–4 Hz hören\n→ Ashwagandha KSM-66 300 mg\n→ 4-7-8 Atmung: 4 ein · 7 halten · 8 aus`},
+  {id:'p5',col:'#dc2626',lbl:'Sofort',title:'Kopfschmerzen — Sofort',tags:['kopfschmerzen','pfefferminze','magnesium','elektrolyte'],body:`SOFORT:\n→ 500ml Wasser + Prise Meersalz + Zitrone\n→ Pfefferminzöl auf Schläfen + Nacken\n   ↳ Gleich wirksam wie 1000mg Paracetamol! (Studie)\n→ Basilikum-Tinktur 15 Tr. in Wasser\n→ Ingwer-Tee · Magnesium 400 mg\n→ Kalte Kompress Nacken + warme Füße`},
+  {id:'p6',col:'#be185d',lbl:'Zyklus',title:'Menstruationskrämpfe',tags:['menstruation','krämpfe','magnesium','ingwer','wärme'],body:`AKUT:\n→ Wärmeflasche Unterbauch\n→ Magnesium 400 mg sofort\n→ Ingwer-Tee 3 Tassen\n   ↳ Gleich wirksam wie Ibuprofen 400mg! (Studie)\n→ Kamille-Tee (krampflösend)\n\nPRÄVENTIV ab Tag 15:\n• Magnesium Bisglycinat 400 mg täglich\n• Omega-3 EPA 1000 mg\n• Kurkuma + Pfeffer täglich`},
+  {id:'p7',col:'#ca8a04',lbl:'Stress',title:'Stress & Cortisol',tags:['stress','cortisol','ashwagandha','hrv','magnesium'],body:`PROTOKOLL:\n① Ashwagandha KSM-66 300–600 mg abends\n② Magnesium Bisglycinat 400 mg abends\n③ Koffein nur vor 12 Uhr\n④ L-Theanin 200 mg + Kaffee\n⑤ HRV täglich messen\n⑥ Spaziergang > HIIT bei Erschöpfung\n⑦ Erdung: 30 min barfuß auf Erde`},
+  {id:'p8',col:'#d97706',lbl:'Haare',title:'Haarausfall diffus (vegan)',tags:['haarausfall','ferritin','eisen','zink','rosmarin'],body:`URSACHEN:\n① Ferritin < 70 µg/l → häufigste Ursache!\n② TSH > 2.5 / Hashimoto\n③ Zink- · B12- · D3-Mangel\n\nPROTOKOLL:\n• Ferritin auf > 80 µg/l bringen\n• Zink 25–30 mg + Biotin 2000 µg\n• Rosmarin-Öl → Kopfhaut massieren\n  ↳ Studie 2023: gleich wirksam wie Minoxidil!`},
+];
+DB.frequenzen=[
+  {id:'f1',col:'#7c3aed',lbl:'Schlaf · Delta',title:'3 Hz — Trouble Sleeping',tags:['3hz','schlaf','delta','binaural'],body:`3 Hz = Delta-Wellen — tiefster Schlafzustand\n\n• Tiefschlaf-Förderung (Phase 3 NREM)\n• Körperregeneration auf Zellebene\n• Wachstumshormon ↑\n\n→ Delta-Binaural-Beats (1–4 Hz) beim Einschlafen\n→ Kopfhörer notwendig!\n→ Kombination: Magnesium + 17°C + 3 Hz`},
+  {id:'f2',col:'#7c3aed',lbl:'Angst · Entspannung',title:'432 Hz — Anxious (Beruhigend)',tags:['432hz','angst','entspannung','cortisol'],body:`432 Hz = Naturstimmung — Alternative zu 440 Hz\n\n• Cortisol ↓ (messbar in Studien)\n• Herzfrequenz normalisiert\n• Erdend, entspannend\n\n→ Angst, innere Unruhe\n→ Meditation + Atemübungen\n→ Abendliche Entspannung`},
+  {id:'f3',col:'#7c3aed',lbl:'Metabolismus',title:'280 Hz — Loss Weight',tags:['280hz','abnehmen','metabolismus'],body:`280 Hz — mit Verdauung + Stoffwechsel assoziiert\n\nUnterstützend zu:\n→ Gesunder Ernährung (nicht allein!)\n→ Intermittierendem Fasten 16:8\n→ Berberine (natürliches Metformin)`},
+  {id:'f4',col:'#7c3aed',lbl:'Wohlbefinden · DNA',title:'528 Hz — Feel Unwell / Reparatur',tags:['528hz','heilung','dna','feel unwell'],body:`528 Hz = Miracle Tone / Love Frequency\n\n• DNA-Reparatur (Studie: Brainwave Research UK)\n• Entzündung ↓\n• Cortisol ↓ (messbar)\n\n→ Bei Unwohlsein, Erkrankung\n→ Täglich 20–30 min mit Kopfhörern`},
+  {id:'f5',col:'#7c3aed',lbl:'Energie',title:'417 Hz — Energy Boost',tags:['417hz','energie','boost','solfeggio'],body:`417 Hz = Solfeggio Facilitating Change\n\n• Energieaktivierung · Blockaden lösen\n\nAlle Solfeggio:\n174 Hz Schmerz · 285 Hz Gewebe · 396 Hz Angst\n417 Hz Energie · 528 Hz DNA · 639 Hz Beziehungen`},
+  {id:'f6',col:'#7c3aed',lbl:'Erdfrequenz',title:'7.83 Hz — Schumann-Resonanz',tags:['schumann','7.83hz','erdung','earthing'],body:`7.83 Hz = Grundfrequenz der Erde (1952 entdeckt)\n\n→ 30 min barfuß auf Erde/Gras/Sand täglich\n→ Beton + Asphalt blockieren!\n\n• CRP + IL-6 ↓ · Cortisol normalisiert\n• Schlaf ↑ · HRV ↑ · Immunsystem reguliert`},
+  {id:'f7',col:'#7c3aed',lbl:'Licht · Zellen',title:'Rotlicht & Nahinfrarot',tags:['rotlicht','infrarot','photobiomodulation','atp'],body:`Rotlicht 630–700 nm + Nahinfrarot 800–1100 nm\n\n• ATP-Produktion ↑ · Entzündung ↓\n• Kollagen ↑ · Wundheilung ↑ · Haarwuchs ↑\n\n→ Morgens 10 min direkte Sonne (kein Glas!)\n→ Rotlicht-Panel (810 nm optimal)\n→ Infrarot-Sauna wöchentlich`},
+];
+DB.naehrstoffe=[
+  {id:'n1',col:'#059669',lbl:'Vegan-kritisch',title:'Vitamin B12 — Methylcobalamin',tags:['b12','vegan','nerven','aphthen'],body:`Veganer MÜSSEN supplementieren!\n\n• 1000–2000 µg/Tag Methylcobalamin sublingual\n• Nicht Cyanocobalamin!\nLabor: Aktives B12 > 50 pmol/l`},
+  {id:'n2',col:'#dc2626',lbl:'Mineral',title:'Eisen & Ferritin',tags:['eisen','ferritin','energie','haarausfall','aphthen'],body:`Ferritin 70–150 µg/l = optimal (nicht nur > 12!)\n\nQuellen: Linsen 9mg · Kürbiskerne 8mg · Hanfsamen\n• Vitamin C zeitgleich = 3× Aufnahme!\n• Kaffee/Tee: 1h Abstand`},
+  {id:'n3',col:'#059669',lbl:'Mineral',title:'Magnesium — 300+ Enzyme',tags:['magnesium','schlaf','pms','krämpfe','kopfschmerzen'],body:`Mangel: Krämpfe · Schlaf · PMS · Kopfschmerzen\n\n• Bisglycinat abends (Schlaf) — 300–400 mg\n• Malat morgens (Energie)\nKoffein + Alkohol erhöhen Ausscheidung!`},
+  {id:'n4',col:'#2563eb',lbl:'Fettsäuren',title:'Omega-3 EPA/DHA — Algenöl',tags:['omega3','epa','dha','algenöl','entzündung'],body:`ALA (Leinsamen) nur 5–10% Umwandlung!\n→ Algenöl = direkte vegane EPA+DHA Quelle\n\n250–500 mg EPA+DHA täglich\nLabor: Omega-3-Index > 8%`},
+  {id:'n5',col:'#d97706',lbl:'Mineral',title:'Zink — Anti-Androgen',tags:['zink','akne','immunsystem','aphthen','pcos'],body:`Anti-androgen + antibakteriell!\n\nQuellen: Kürbiskerne 7.8mg · Hanfsamen 9.9mg\n• Bisglycinat oder Picolinat\n• 15–25 mg normal · 30 mg bei Akne\n• Zn:Cu = 8:1 beachten!`},
+  {id:'n6',col:'#059669',lbl:'Vitamin',title:'Vitamin D3 + K2',tags:['vitamin d','d3','k2','immunsystem','pcos'],body:`D3 ohne K2 → Kalzium in Arterien!\nMagnesium aktiviert D3!\n\n2000–4000 IE D3 + 100–200 µg K2 MK-7\nLabor: 50–80 ng/ml (nicht nur > 20!)`},
+  {id:'n7',col:'#d97706',lbl:'Spezial',title:'Myo-Inosit — PCOS',tags:['inosit','pcos','insulin','hormone'],body:`Evidenzbasiert bei PCOS!\n\nMyo-Inosit 2000 mg + D-Chiro-Inosit 50 mg täglich (40:1)\n→ Insulinsensitivität ↑ · Androgene ↓`},
+];
+DB.naturheilkunde=[
+  {id:'nh1',col:'#1a7c35',lbl:'Heilpflanze',title:'Brennnessel — Eisenlieferant',tags:['brennnessel','eisen','harnwege','haarausfall'],body:`Vitamin A, C, K · Eisen · Calcium · Magnesium\n\n• Harnwegsinfekte · Eisenmangel · Rheuma\nTinktur: 15 Tr. 3×/Tag · max. 4 Wochen`},
+  {id:'nh2',col:'#1a7c35',lbl:'Heilpflanze',title:'Kamille — Allrounder',tags:['kamille','magen','schlaf','menstruation','akne'],body:`• Magen/Blähungen · Schlaf · Menstruation\n• Wunden + Ekzeme (Umschlag)\n• Akne (Dampfbad 10 min)\nTee: 1–2 TL, 5 min ziehen`},
+  {id:'nh3',col:'#1a7c35',lbl:'Gewürz',title:'Kurkuma — Entzündungshemmer',tags:['kurkuma','entzündung','arthritis','leber'],body:`Immer mit schwarzem Pfeffer!\n→ Piperin erhöht Aufnahme um 2000%\n\n• COX-2 Hemmer · Leberschutz · Gehirnschutz\nGoldene Milch: 1 TL Kurkuma + Prise Pfeffer + Pflanzenmilch`},
+  {id:'nh4',col:'#1a7c35',lbl:'Gewürz',title:'Knoblauch — Natürliches Antibiotikum',tags:['knoblauch','allicin','antibakteriell','immunsystem'],body:`Allicin entsteht beim Zerdrücken!\n→ 10 min warten → dann erhitzen\n\n• Breitbandantibiotikum · Antiviral · Blutdruck ↓\n1–3 Zehen roh täglich`},
+  {id:'nh5',col:'#1a7c35',lbl:'Öl',title:'Kokosöl — Laurinsäure',tags:['kokosöl','laurinsäure','ölziehen','haare','aphthen'],body:`Laurinsäure (50%) = stark antibakteriell\n\n• Ölziehen 10–15 min morgens\n• Haare: Maske 1h vor Waschen\n• Aphthen: direkt auftupfen`},
+  {id:'nh6',col:'#1a7c35',lbl:'Adaptogen',title:'Ashwagandha KSM-66',tags:['ashwagandha','stress','cortisol','schlaf'],body:`• Cortisol ↓ bis 28% (klinisch)\n• Schlafqualität ↑ · Stress ↓\n\n300–600 mg täglich abends · 3–6 Monate, dann Pause`},
+];
+DB.entgiftung=[
+  {id:'e1',col:'#c2410c',lbl:'Schwermetalle',title:'Klinghardt-Protokoll',tags:['schwermetalle','klinghardt','chlorella','koriander','zeolith'],body:`IMMER Mobilisierer + Binder zusammen!\n\n① MOBILISIEREN: Koriander (löst Metalle aus Gehirn)\n② BINDEN: Chlorella + Zeolith\n③ AUSLEITEN: über Darm\n\n• Koriander-Tinktur: 2–3 Tr. 3×/Tag (langsam steigern)\n• Chlorella: 3–5g täglich\n• Zeolith: 1 TL 3×/Tag\n• 1h Abstand zu Medikamenten!`},
+  {id:'e2',col:'#c2410c',lbl:'Algen',title:'Chlorella — Schwermetall-Bindung',tags:['chlorella','entgiftung','schwermetalle'],body:`Aufgebrochene Zellwand kaufen!\n\n• Quecksilber, Blei, Cadmium binden\n• Verhindert Rückresorption\nStart mit 1g/Tag → langsam auf 5g steigern`},
+  {id:'e3',col:'#c2410c',lbl:'Mineral',title:'Zeolith — Vulkanisches Bindemittel',tags:['zeolith','entgiftung','klinoptilolith'],body:`• Bindet Schwermetalle im Darm\n• Wirkt nur im Darm (nicht resorbiert)\n• 1h Abstand zu anderen Supplements\n1 TL Pulver in Wasser · 1–3×/Tag`},
+  {id:'e4',col:'#c2410c',lbl:'Pflanze',title:'Koriander — Gehirn-Entgifter',tags:['koriander','entgiftung','gehirn'],body:`Einzige Pflanze die Blut-Hirn-Schranke überwindet!\n\nNUR mit Chlorella/Zeolith kombinieren!\nFrisch: 1–2 EL täglich · Tinktur: 2–5 Tr. 3×/Tag`},
+  {id:'e5',col:'#c2410c',lbl:'Methode',title:'Sauna & Schwitzen',tags:['sauna','schwitzen','entgiftung','infrarot'],body:`Haut = größtes Entgiftungsorgan!\n\n• 15–30 min · 2–4× wöchentlich\n• Danach duschen!\n• Danach Chlorella einnehmen (bindet ausgeleitete Gifte)`},
+];
+DB.kupfer=[
+  {id:'k1',col:'#d97706',lbl:'Ayurveda',title:'Kupferwasser — Tamra Jal',tags:['kupfer','kupferwasser','tamra jal','ayurveda','antibakteriell'],body:`Tamra Jal = Wasser aus Kupferbehälter (5000 Jahre!)\n\n• Leitungswasser in Kupfer = nach 16h keimfrei (Studie)\n• COVID-19 auf Kupfer nach 4h inaktiv (vs. Stahl 72h!)\n• pH-Wert steigt (alkalisch)\n\nAnleitung:\nAbends stilles Wasser → 8–16h → morgens nüchtern trinken\nReinigung: Zitronensaft + Salz`},
+  {id:'k2',col:'#d97706',lbl:'Nährstoff',title:'Kupfer als Spurenelement',tags:['kupfer','kollagen','eisen','immunsystem','myelin'],body:`Oft vergessen — essentiell!\n\n• Kollagen-Synthese · Eisen-Stoffwechsel\n• Myelin-Bildung · Melanin · Immunfunktion\n\nQuellen:\n• Paranüsse 2.2mg/30g ← TOP\n• Cashews · Kürbiskerne · Dunkle Schokolade 85%\n\nZn:Cu = 8:1 (Zink-Supplement → Kupfer mitgeben!)`},
+  {id:'k3',col:'#d97706',lbl:'Alltag',title:'Kupfer im Alltag',tags:['kupfer','zungenschaber','trinkflasche','alltag'],body:`Zungenschaber (Kupfer):\n• Morgens vor dem Zähneputzen\n• Von hinten nach vorn abschaben\n• Entfernt Toxine der Nacht\n• Mundgeruch ↓ · Agni ↑\n\nKupfertrinkflasche:\n• Nur stilles Wasser! · Max. 1L täglich`},
+];
+DB.zahnpflege=[
+  {id:'z1',col:'#2563eb',lbl:'Naturzahnbürste',title:'Miswak-Stick — WHO empfohlen',tags:['miswak','zahnbürste','who','antibakteriell','plaque'],body:`Salvadora persica · 1400+ Jahre Tradition · WHO-Empfehlung!\n\nBelegt:\n• Plaque -60% (6 Wochen)\n• Zahnfleischentzündung -40%\n• Gleich wirksam wie Zahnbürste (1200 Teilnehmer)\n\nAnwendung:\n① 1 cm ankauen bis Fasern entstehen\n② Zähne bürsten\n③ Alle 2–3 Tage: Ende 2–3mm abschneiden`},
+  {id:'z2',col:'#2563eb',lbl:'Ölziehen',title:'Ölziehen (Oil Pulling)',tags:['ölziehen','kokosöl','mundflora','zahnfleisch'],body:`3000 Jahre altes Ayurveda-Ritual\n\n① Morgens nüchtern (vor allem!)\n② 1 EL Kokosöl in den Mund\n③ 10–15 min schieben (nicht würgen!)\n④ AUSSPUCKEN (nie schlucken!)\n⑤ Mundspülung mit Salzwasser\n\n• 20 Mio. Bakterien pro Session\n• Zahnfleischentzündung ↓ (klinisch belegt)`},
+  {id:'z3',col:'#2563eb',lbl:'Zahnpasta',title:'Natürliche Zahnpflege',tags:['zahnpasta','sls-frei','natron','alverde'],body:`SLS = Sodium Lauryl Sulfate → Ursache Aphthen!\n\n✅ Kein SLS · Saccharin · Triclosan\n\nOptionen:\n• Alverde Bio-Pfefferminze (DM) SLS-frei ✅\n• Weleda Naturell SLS-frei ✅\n• Miswak-Stick: keine Zahnpasta nötig!`},
+];
+DB.hormone=[
+  {id:'ho1',col:'#be185d',lbl:'Zyklus',title:'Seed Cycling — Hormonbalance',tags:['seed cycling','östrogen','progesteron','leinsamen','sesam'],body:`Follikelphase (Tag 1–14):\n→ 1 EL Leinsamen (frisch gemahlen!) + 1 EL Kürbiskerne\n   Lignane → Östrogenbalance · Zink → Progesteron\n\nLutealphase (Tag 15–28):\n→ 1 EL Sesam + 1 EL Sonnenblumenkerne\n   Lignane → Progesteron ↑ · Vit E → Progesteron ↑`},
+  {id:'ho2',col:'#be185d',lbl:'PCOS',title:'PCOS — Komplettes Protokoll',tags:['pcos','inosit','berberine','insulin','androgene','spearmint'],body:`Kernursache: Insulinresistenz (70%)\n\n① Zucker + Weißmehl SOFORT stop\n② Myo-Inosit 2000 mg + D-Chiro-Inosit 50 mg (40:1)\n③ Berberine 500 mg 3×/Tag\n④ Spearmint-Tee 2×/Tag\n⑤ Seed Cycling · NAC 600 mg 3×/Tag\n\nZeitraum: 3–6 Monate`},
+  {id:'ho3',col:'#be185d',lbl:'Leber',title:'Östrogenabbau & Leber',tags:['östrogen','leber','dim','brokkoli'],body:`Leber baut Östrogen ab → Überlastung → Östrogenüberschuss\n\n• Brokkoli-Sprossen täglich (Sulforaphan!)\n• Löwenzahn-Tee morgens nüchtern\n• DIM 200 mg/Tag\n• Calcium-D-Glucarat 500 mg · NAC 600 mg · Kein Alkohol!`},
+];
+DB.energetisch=[
+  {id:'en1',col:'#ca8a04',lbl:'Erdung',title:'Schumann-Resonanz 7.83 Hz',tags:['schumann','7.83hz','erdung','earthing'],body:`Grundfrequenz der Erde · Entdeckt 1952\n\n→ 30 min barfuß auf Erde/Gras/Sand täglich\n→ Beton + Asphalt blockieren!\n\n• CRP + IL-6 ↓ · Cortisol normalisiert\n• Schlaf ↑ · HRV ↑ · Wundheilung ↑`},
+  {id:'en2',col:'#ca8a04',lbl:'Biometrie',title:'HRV — Herzfrequenzvariabilität',tags:['hrv','vagusnerv','stress','regeneration'],body:`HRV erhöhen:\n• Kohärenz-Atmung (6 Atemzüge/min)\n• Kaltdusche (Vagusnerv!)\n• Schlaf vor Mitternacht\n• Magnesium + Omega-3\n• Alkohol STOPP\n\nMessen: Oura Ring · Polar H10`},
+  {id:'en3',col:'#ca8a04',lbl:'Biohacking',title:'Kältetherapie — Dopamin +250%',tags:['kältetherapie','kaltdusche','dopamin','vagusnerv'],body:`Noradrenalin +300% · Dopamin +250% nach einer Session!\n\nProtokoll:\nWoche 1–2: 30 Sek kalt am Ende\nWoche 3–4: 1–2 min kalt\nWoche 5+: 2–3 min vollständig kalt`},
+];
+DB.natron=[{id:'na1',col:'#4d7c0f',lbl:'50+ Anwendungen',title:'Natron — Gesundheit & Pflege',tags:['natron','sodbrennen','hals','blase','zähne','basenkur'],body:`GESUNDHEIT:\n• Sodbrennen: ½ TL in 200ml Wasser\n• Halsschmerzen gurgeln: 1 TL in 200ml Wasser 3×/Tag\n• Blasenentzündung: ½ TL in Wasser\n• Insektenstiche: Natron-Paste → Juckreiz sofort ↓\n• Basenkur: morgens ¼ TL nüchtern, 3–4 Wochen\n\nKÖRPERPFLEGE:\n• Deo · Zähne whitening (1–2×/Woche max.)\n• Fußbad: 3 EL in warmem Wasser`}];
+DB.aloe=[{id:'al1',col:'#10b981',lbl:'Universal',title:'Aloe Vera — 40+ Anwendungen',tags:['aloe vera','haut','akne','sonnenbrand','aphthen','haare'],body:`GEL HERSTELLEN:\n① Blatt abschneiden\n② 1h Aloinsaft ablaufen (GIFTIG → wegleeren!)\n③ Grüne Schicht entfernen → Gel herausschaben\nKühlschrank: 2 Wochen · Eingefroren: 6 Monate\n\nHAUT:\n• Sonnenbrand: besser als Hydrokortison 1%!\n• Akne: Beta-Sitosterin antibakteriell\n• Aphthen: direkt auftragen\n\nHAARE: 30 min vor Waschen → Haarausfall ↓`}];
+DB.laborwerte=[{id:'lb1',col:'#6d28d9',lbl:'Referenz',title:'Optimale Laborwerte',tags:['laborwerte','ferritin','b12','vitamin d','tsh','insulin','zink'],body:`Konventionell = Krankheitsvermeidung\nOptimal = Gesundheitsoptimierung!\n\nParameter          Konventionell     Optimal\n────────────────────────────────────────────\nFerritin           > 12 µg/l         70–150 µg/l\nAktives B12        > 20 pmol/l       > 50 pmol/l\n25-OH-Vit D        > 20 ng/ml        50–80 ng/ml\nTSH                0.4–4.0 mIU/l     0.5–2.0 mIU/l\nNüchtern-Insulin   < 25 µIU/ml       < 8 µIU/ml\nSerum-Zink         60–120 µg/dl      80–120 µg/dl\nMagnesium          0.7–1.0 mmol/l    0.85–1.10 mmol/l\nOmega-3-Index      —                 > 8%\nhsCRP              < 5 mg/l          < 1 mg/l`}];
+
+const ALL=Object.values(DB).flat();
+
+const FG=[
+  {g:'Tofu-Gerichte',tag:'Tofu',items:['Gebratener Tofu Gemüse','Tofu-Tacos','Tofu-Curry','Tofu-Salat Sesam','Tofu-Ramen','Tofu-Bowl Reis','Tofu-Wrap','Tofu-Bolognese','Tofu-Pfanne Brokkoli','Mapo Tofu vegan','Tofu-Scramble','Tofu Erdnusssauce','Tofu-Spieße','Palak Tofu','Tofu-Gyros']},
+  {g:'Linsengerichte',tag:'Linsen',items:['Roter Linseneintopf','Rotes Linsen-Curry','Linsensuppe','Linsen-Tacos','Linsen-Bolognese','Linsensalat Kräuter','Linsen-Bowl Süßkartoffel','Linsen-Burger','Dhal','Mujaddara','Grüne Linsen Spinat','Linsen-Tomaten-Pfanne']},
+  {g:'Kichererbsen-Gerichte',tag:'Kichererbsen',items:['Kichererbsen-Curry','Falafel','Falafel-Wrap','Kichererbsen-Burger','Kichererbsen-Salat','Chana Masala','Buddha-Bowl','Marokk. Kichererbsen','Geröstete Kichererbsen','Kichererbsensuppe','Pasta e Ceci','Socca']},
+  {g:'Kartoffelgerichte',tag:'Kartoffel',items:['Ofenkartoffeln','Kartoffelgratin','Bratkartoffeln','Kartoffel-Wedges','Smashed Potatoes','Kartoffelpüree','Kartoffelauflauf','Kartoffelsalat','Kartoffelpfanne','Gefüllte Ofenkartoffeln','Kartoffelsuppe']},
+  {g:'Reisgerichte',tag:'Reis',items:['Reis Lauch-Curry','Reis Tofu','Reis Tomate Zucchini','Reis Brokkoli Karotten','Gebratener Reis','Reis Bohnen Mais','Reis Linsen','Risotto','Sushi-Bowl vegan','Kimchi-Reis']},
+  {g:'Nudelgerichte',tag:'Nudeln',items:['Nudeln grünes Pesto','Nudeln Tomatensauce','Nudeln Bolognese','Nudeln Brokkoli','Nudeln Pilzsauce','Nudeln Spinat-Sahne','One-Pot-Pasta','Vegane Mac and Cheese','Ramen vegan']},
+  {g:'Gemüsegerichte',tag:'Gemüse',items:['Spitzkohl-Tofu-Pfanne','Brokkoli Knoblauch','Ofengemüse','Auberginen-Curry','Gefüllte Paprika','Ratatouille','Süßkartoffel-Curry','Gebackene Süßkartoffeln','Rosenkohl Sesam']},
+  {g:'Eintöpfe',tag:'Eintopf',items:['Lasagne','Lasagnesuppe','Linseneintopf','Chili sin Carne','Gemüseeintopf','Tomaten-Linsen-Eintopf','Marokkanischer Eintopf']},
+  {g:'Teiggerichte',tag:'Teig',items:['Pfannkuchen','Pizza','Wraps','Flammkuchen','Quesadillas','Burger']},
+  {g:'Saucen & Beilagen',tag:'Sauce',items:['Pilzsauce','Tomatensauce','Curry-Sauce','Grünes Pesto','Bolognese','Guacamole','Tahini-Sauce','Harissa']},
+];
+
+// MULTI-API KI
+const APIS=[
+  {id:'g8',nm:'Groq 8B',model:'llama-3.1-8b-instant',url:'https://api.groq.com/openai/v1/chat/completions',key:'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',rpd:14400,used:0,reset:0},
+  {id:'g70',nm:'Groq 70B',model:'llama-3.3-70b-versatile',url:'https://api.groq.com/openai/v1/chat/completions',key:'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',rpd:1000,used:0,reset:0},
+  {id:'cb',nm:'Cerebras',model:'llama3.1-8b',url:'https://api.cerebras.ai/v1/chat/completions',key:'',rpd:99999,used:0,reset:0},
+  {id:'gm',nm:'Gemini',model:'gemini-2.0-flash',url:'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',key:'',rpd:1500,used:0,reset:0},
+];
+let kiH=[];
+function loadAPI(){APIS.forEach(a=>{const s=localStorage.getItem('kia_'+a.id);if(s){const p=JSON.parse(s);a.key=p.key||a.key;a.used=p.used||0;a.reset=p.reset||0;}if(Date.now()>a.reset){a.used=0;a.reset=Date.now()+86400000;}});}
+function saveAPI(a){localStorage.setItem('kia_'+a.id,JSON.stringify({key:a.key,used:a.used,reset:a.reset}));}
+function pickAPI(){return APIS.find(a=>a.key&&a.used<a.rpd);}
+const SYS='Du bist Planty, der KI-Assistent der App Planted. Kennst: Naturheilkunde, Frequenzmedizin (3Hz Schlaf, 432Hz Angst, 528Hz DNA, 417Hz Energie, 280Hz Metabolismus, Schumann 7.83Hz), Klinghardt-Entgiftung (Koriander+Chlorella+Zeolith), Kupfer/Tamra Jal, Miswak, Ölziehen, PCOS, Seed Cycling, B12/Eisen/Zink/Mg/D3/Omega-3. Antworte Deutsch, kurz, direkt. Keine Pharmaindustrie.';
+
+function addKM(role,text){
+  const el=document.getElementById('ki-msgs');if(!el)return;
+  const d=document.createElement('div');
+  d.className='km '+(role==='user'?'user':role==='sys'?'sys':'asst');
+  d.textContent=text;el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+async function sendKI(){
+  const inp=document.getElementById('ki-in');if(!inp)return;
+  const txt=inp.value.trim();if(!txt)return;
+  const api=pickAPI();
+  if(!api){addKM('sys','❌ Kein KI-API. Bitte Key im Profil eintragen.');return;}
+  inp.value='';addKM('user',txt);kiH.push({role:'user',content:txt});
+  const th=document.createElement('div');th.className='km sys';th.textContent='⏳ Planty denkt…';
+  document.getElementById('ki-msgs').appendChild(th);document.getElementById('ki-msgs').scrollTop=9999;
+  try{
+    const r=await fetch(api.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+api.key},
+      body:JSON.stringify({model:api.model,messages:[{role:'system',content:SYS},...kiH.slice(-8)],max_tokens:600,temperature:.7})});
+    const d=await r.json();th.remove();
+    if(d.choices&&d.choices[0]&&d.choices[0].message){
+      const rep=d.choices[0].message.content;
+      addKM('asst',rep);kiH.push({role:'assistant',content:rep});
+      api.used++;saveAPI(api);renderAPIPills();
+    }else{addKM('sys','❌ '+(d.error?d.error.message:'Unbekannter Fehler'));}
+  }catch(e){th.remove();addKM('sys','❌ Verbindungsfehler.');}
+}
+function renderAPIPills(){
+  const el=document.getElementById('api-pills');if(!el)return;
+  el.innerHTML=APIS.map(a=>'<span class="ap'+(a.key?' live':'')+'">'+a.nm+(a.key?' '+(a.rpd-a.used):'✕')+'</span>').join('');
+}
+function renderAPIStatus(){
+  const el=document.getElementById('api-status');if(!el)return;
+  el.innerHTML=APIS.map(a=>'<div class="srow"><div class="srl"><div class="sric" style="color:'+(a.key?'var(--a)':'var(--red)')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><div><div class="srnm">'+a.nm+'</div><div class="srsb">'+a.model+' · '+a.used+'/'+a.rpd+'</div></div></div><div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:'+(a.key?'#22c55e':'#ef4444')+'"></div>'+(a.key?'':'<span style="font-size:10px;color:var(--a);cursor:pointer;font-weight:600" data-aid="'+a.id+'">Key</span>')+'</div></div>').join('');
+  el.querySelectorAll('[data-aid]').forEach(b=>b.addEventListener('click',()=>{
+    const api=APIS.find(x=>x.id===b.dataset.aid);if(!api)return;
+    const k=prompt('API Key für '+api.nm+':');
+    if(k&&k.length>10){api.key=k;saveAPI(api);renderAPIStatus();renderAPIPills();}
+  }));
+}
+
+// THEME
+let dark=false;
+function toggleTheme(){
+  dark=!dark;
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  document.getElementById('dm-pill').classList.toggle('on',dark);
+  document.getElementById('tc').content=dark?'#080b08':'#ffffff';
+  document.getElementById('theme-ico').innerHTML=dark
+    ?'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+    :'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+}
+
+// USERS
+function renderUsers(){
+  const u=gU();
+  const av=document.getElementById('tb-user-avatar');
+  if(av){av.textContent=u.id;av.style.background='linear-gradient(135deg,'+u.col+','+u.col+'aa)';av.style.border='2.5px solid '+u.col;}
+  const sub=document.getElementById('tb-sub');if(sub)sub.textContent='Hallo, '+u.name+' 👋';
+  const pa=document.getElementById('ph-av');if(pa){pa.style.background='linear-gradient(135deg,'+u.col+','+u.col+'aa)';pa.textContent=u.id;}
+  const pn=document.getElementById('ph-nm');if(pn)pn.textContent='Nutzer '+u.name;
+  const pu=document.getElementById('profile-users');
+  if(pu)pu.innerHTML=USERS.map(us=>'<div class="srow" style="'+(us.id===CU?'background:var(--al)':'')+'" data-uid="'+us.id+'"><div class="srl"><div style="width:30px;height:30px;border-radius:50%;background:'+us.col+';color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center">'+us.id+'</div><div><div class="srnm">Nutzer '+us.name+'</div><div class="srsb">'+(us.id===CU?'Aktiv':'Wechseln')+'</div></div></div><div style="color:'+(us.id===CU?'var(--a)':'var(--text3)')+';font-weight:700">'+(us.id===CU?'✓':'›')+'</div></div>').join('');
+  if(pu)pu.querySelectorAll('[data-uid]').forEach(r=>r.addEventListener('click',()=>{switchUser(r.dataset.uid);goTab('home');}));
+}
+function switchUser(id){CU=id;localStorage.setItem('pln_cu',id);renderUsers();renderFavs();renderRecs();}
+
+// NAV
+const TABS=['home','health','cat','food','notes','search','profile'];
+let CT='home',FF='',NF='';
+function goTab(id){
+  TABS.forEach(t=>{
+    const s=document.getElementById('s-'+t);if(s)s.classList.toggle('on',t===id);
+    const n=document.getElementById('t-'+t);if(n)n.classList.toggle('on',t===id);
+  });
+  const af=document.getElementById('afab');if(af)af.classList.toggle('on',id==='food');
+  CT=id;
+  if(id==='home'){renderFavs();renderRecs();}
+  if(id==='health')renderCatGrid();
+  if(id==='food')renderFood();
+  if(id==='notes')renderNotes();
+  if(id==='profile'){renderUsers();renderAPIStatus();}
+  const v=document.getElementById('view');if(v)v.scrollTop=0;
+}
+
+// UTILS
+const nm=s=>(s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const tok=s=>nm(s).split(/[\s,+·]+/).filter(t=>t.length>1);
+function hl(t,toks){let o=esc(t);toks.forEach(tk=>{if(tk.length<2)return;o=o.replace(new RegExp(tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>'<mark>'+m+'</mark>');});return o;}
+function scH(e,toks){let s=0;toks.forEach(t=>{if(nm(e.title).includes(t))s+=10;if((e.tags||[]).join(' ').includes(t))s+=6;if(nm(e.body||'').includes(t))s+=2;});return s;}
+
+// SEARCH
+function doSearch(q){
+  const toks=tok(q);if(!toks.length){goTab(CT==='search'?'home':CT);return;}
+  TABS.forEach(t=>{const s=document.getElementById('s-'+t);if(s)s.classList.remove('on');const n=document.getElementById('t-'+t);if(n)n.classList.remove('on');});
+  document.getElementById('s-search').classList.add('on');
+  const af=document.getElementById('afab');if(af)af.classList.remove('on');
+  CT='search';
+  const hR=ALL.map(e=>({e,s:scH(e,toks)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  const dishes=lD();
+  const allF=[...FG.flatMap(g=>g.items.map(n=>({n,g:g.g,tag:g.tag}))), ...dishes.map(d=>({n:d.n,g:d.cat||'Eigene',tag:'Eigene',custom:true,notes:d.notes||''}))];
+  const fR=allF.map(f=>({f,s:tok(q).reduce((s,t)=>{if(nm(f.n).includes(t))s+=10;if(nm(f.g).includes(t))s+=4;return s;},0)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  const tot=hR.length+fR.length;
+  const st=document.getElementById('srch-stats');if(st)st.textContent=tot?tot+' Treffer für „'+q+'"':'';
+  let html='';
+  if(!tot){html='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div class="et">Nichts gefunden</div><div class="es">Andere Schreibweise versuchen</div></div>';}
+  else{
+    if(hR.length){html+='<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 16px 5px">Gesundheit ('+hR.length+')</div>';html+=hR.map((x,i)=>buildEC(x.e,'sr'+i,toks)).join('');}
+    if(fR.length){html+='<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 16px 5px">Gerichte ('+fR.length+')</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 16px">';
+      fR.forEach(({f})=>{html+='<div class="fc'+(f.custom?' cust':'')+'" data-fn="'+esc(f.n)+'" data-fg="'+esc(f.g)+'" data-fc="'+(f.custom?'1':'0')+'" data-fnotes="'+esc(f.notes||'')+'">'+'<div class="fc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg></div><div class="fc-nm">'+hl(f.n,toks)+'</div><div class="fc-tg">'+esc(f.g)+'</div></div>';});
+      html+='</div>';}
+  }
+  const sl=document.getElementById('srch-list');if(sl){sl.innerHTML=html;bindFoodCards(sl);bindECHeads(sl);}
+}
+
+// FAVS
+function renderFavs(){
+  const favs=lF(),sl=document.getElementById('fav-sl'),strip=document.getElementById('fav-strip');
+  if(!strip)return;
+  if(!favs.length){if(sl)sl.style.display='none';strip.innerHTML='';return;}
+  if(sl)sl.style.display='flex';
+  strip.innerHTML=favs.map(f=>'<div class="fav-pill" data-fid="'+esc(f.id)+'"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="fav-pill-nm">'+esc(f.name.length>18?f.name.slice(0,18)+'…':f.name)+'</span></div>').join('');
+  strip.querySelectorAll('.fav-pill').forEach(p=>p.addEventListener('click',()=>{const e=ALL.find(x=>x.id===p.dataset.fid);if(e)openHealth(e);}));
+}
+
+// RECENTS
+function renderRecs(){
+  const r=lR(),el=document.getElementById('rec-list');if(!el)return;
+  if(!r.length){el.innerHTML='<div class="nodata">Noch nichts angesehen.</div>';return;}
+  el.innerHTML=r.map(x=>'<div class="ri" data-rid="'+esc(x.id)+'" data-rtype="'+(x.type||'health')+'"><div class="ri-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="ri-nm">'+esc(x.name)+'</div><div class="ri-cat">'+esc(x.cat||'')+'</div></div>').join('');
+  el.querySelectorAll('.ri').forEach(ri=>ri.addEventListener('click',()=>{const e=ALL.find(x=>x.id===ri.dataset.rid);if(e)openHealth(e);}));
+}
+
+// CAT GRID
+const SVGIC=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="'+p+'"/></svg>';
+function renderCatGrid(){
+  const el=document.getElementById('cat-grid');if(!el)return;
+  el.innerHTML=CATS.map(c=>'<div class="cat-card" style="--cc:'+c.col+'" data-cid="'+c.id+'">'+'<div class="cat-ic" style="background:'+c.col+';color:#fff">'+SVGIC(c.p)+'</div>'+'<div><div class="cat-nm">'+c.nm+'</div><div class="cat-sub">'+((DB[c.id]||[]).length)+' Einträge</div></div></div>').join('');
+  el.querySelectorAll('[data-cid]').forEach(c=>c.addEventListener('click',()=>openCat(c.dataset.cid)));
+}
+function openCat(id){
+  const cat=CATS.find(c=>c.id===id);if(!cat)return;
+  const entries=DB[id]||[];
+  const hi=document.getElementById('ch-ico');if(hi){hi.innerHTML=SVGIC(cat.p);hi.style.background=cat.col+'20';hi.style.color=cat.col;}
+  const ht=document.getElementById('ch-ttl');if(ht)ht.textContent=cat.nm;
+  const hc=document.getElementById('ch-cnt');if(hc)hc.textContent=entries.length;
+  const cl=document.getElementById('cat-list');if(cl){cl.innerHTML=entries.map((e,i)=>buildEC(e,'c'+i,[])).join('');bindECHeads(cl);bindECStars(cl);}
+  goTab('cat');
+}
+
+// ENTRY CARDS
+function buildEC(e,idx,toks){
+  const cat=CATS.find(c=>(DB[c.id]||[]).some(x=>x.id===e.id));
+  const col=e.col||(cat?cat.col:'var(--a)');
+  const p=cat?cat.p:'';
+  const fav=isF(e.id);
+  return '<div class="ec" style="--ecc:'+col+'">'
+    +'<div class="ec-head" data-eid="'+e.id+'">'
+    +'<div class="ec-ico" style="background:'+col+'20;color:'+col+'">'+SVGIC(p)+'</div>'
+    +'<div class="ec-inf"><div class="ec-lbl" style="color:'+col+'">'+esc(e.lbl||'')+'</div>'
+    +'<div class="ec-ttl">'+(toks.length?hl(e.title,toks):esc(e.title))+'</div>'
+    +'<div class="ec-pre">'+esc((e.body||'').substring(0,80))+'…</div></div>'
+    +'<div class="ec-r">'
+    +'<button class="ec-star'+(fav?' on':'')+'" data-eid="'+e.id+'" data-enm="'+esc(e.title)+'" data-ecat="'+esc(e.lbl||'')+'">'
+    +(fav?'<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+         :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>')
+    +'</button><div class="ec-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></div>'
+    +'</div></div></div>';
+}
+function bindECHeads(c){c.querySelectorAll('.ec-head').forEach(h=>h.addEventListener('click',()=>{const e=ALL.find(x=>x.id===h.dataset.eid);if(e)openHealth(e);}));}
+function bindECStars(c){
+  const STAR_ON='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  const STAR_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  c.querySelectorAll('.ec-star').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    togF(b.dataset.eid,b.dataset.enm,b.dataset.ecat);
+    const f=isF(b.dataset.eid);b.classList.toggle('on',f);b.innerHTML=f?STAR_ON:STAR_OFF;
+  }));
+}
+
+function openHealth(entry){
+  addR({id:entry.id,name:entry.title,cat:entry.lbl||'',type:'health'});
+  renderRecs();
+  const col=entry.col||'var(--a)';
+  const fav=isF(entry.id);
+  const db=document.getElementById('det-body');
+  db.innerHTML='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1.3px;color:'+col+';font-weight:700;margin-bottom:4px">'+esc(entry.lbl||'')+'</div>'
+    +'<div style="font-size:17px;font-weight:800;letter-spacing:-.3px;line-height:1.3;margin-bottom:12px">'+esc(entry.title)+'</div>'
+    +'<div style="background:var(--bg3);border-radius:12px;padding:13px;margin-bottom:11px;border:1px solid var(--border)"><pre style="white-space:pre-wrap;font-family:inherit;font-size:12px;color:var(--text2);line-height:1.85">'+esc(entry.body||'')+'</pre></div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button id="det-fav" style="flex:1;padding:11px;border-radius:12px;border:1px solid '+(fav?'var(--a)':'var(--border)')+';background:'+(fav?'var(--al)':'var(--bg3)')+';color:'+(fav?'var(--a)':'var(--text2)')+';font-size:13px;font-weight:700;cursor:pointer">'+(fav?'⭐ In Favoriten':'☆ Zu Favoriten')+'</button>'
+    +'<button id="det-planty" style="padding:11px 14px;border-radius:12px;border:1px solid var(--a);background:var(--al);color:var(--a);font-size:12px;font-weight:700;cursor:pointer">🌱 Planty</button>'
+    +'</div>';
+  document.getElementById('det-fav').addEventListener('click',function(){
+    togF(entry.id,entry.title,entry.lbl||'');const f=isF(entry.id);
+    this.textContent=f?'⭐ In Favoriten':'☆ Zu Favoriten';
+    this.style.background=f?'var(--al)':'var(--bg3)';this.style.color=f?'var(--a)':'var(--text2)';this.style.borderColor=f?'var(--a)':'var(--border)';
+  });
+  document.getElementById('det-planty').addEventListener('click',()=>{
+    closeM('m-det');setTimeout(()=>{openPlanty();setTimeout(()=>{const ki=document.getElementById('ki-in');if(ki){ki.value='Erkläre mir: '+entry.title;sendKI();}},300);},200);
+  });
+  openM('m-det');
+}
+
+// FOOD
+let foodChipsBuilt=false;
+function renderFood(){
+  if(!foodChipsBuilt){
+    const ch=document.getElementById('food-chips');
+    if(ch){
+      ch.innerHTML='<div class="chip on" data-ft="">Alle</div>'+FG.map(g=>'<div class="chip" data-ft="'+g.tag+'">'+g.g+'</div>').join('')+'<div class="chip" data-ft="Eigene">⭐ Meine</div>';
+      ch.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{FF=c.dataset.ft;ch.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));renderFoodList();}));
+      foodChipsBuilt=true;
+    }
+  }
+  renderFoodList();
+}
+function renderFoodList(){
+  const el=document.getElementById('food-list');if(!el)return;
+  const dishes=lD();let html='';
+  if(!FF||FF==='Eigene'){
+    if(dishes.length){
+      html+='<div class="fg"><div class="fg-h"><div class="fg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span class="fg-nm">Meine Gerichte</span><span class="fg-cnt">'+dishes.length+'</span></div><div class="fg-grid">';
+      dishes.forEach(d=>{html+='<div class="fc cust" data-fn="'+esc(d.n)+'" data-fg="'+esc(d.cat||'Eigene')+'" data-fc="1" data-fnotes="'+esc(d.notes||'')+'">'+'<div class="fc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="fc-nm">'+esc(d.n)+'</div><div class="fc-tg">Eigenes Gericht</div></div>';});
+      html+='</div></div>';
+    }
+    if(FF==='Eigene'){el.innerHTML=html||'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div class="et">Keine eigenen Gerichte</div><div class="es">Tippe auf Gericht in der Nav</div></div>';bindFoodCards(el);return;}
+  }
+  FG.forEach(g=>{
+    if(FF&&FF!=='Eigene'&&g.tag!==FF)return;
+    html+='<div class="fg"><div class="fg-h"><div class="fg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg></div><span class="fg-nm">'+g.g+'</span><span class="fg-cnt">'+g.items.length+'</span></div><div class="fg-grid">';
+    g.items.forEach(n=>{html+='<div class="fc" data-fn="'+esc(n)+'" data-fg="'+esc(g.g)+'" data-fc="0" data-fnotes=""><div class="fc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/></svg></div><div class="fc-nm">'+esc(n)+'</div></div>';});
+    html+='</div></div>';
+  });
+  el.innerHTML=html||'<div class="empty"><div class="et">Keine Gerichte</div></div>';
+  bindFoodCards(el);
+}
+function bindFoodCards(c){c.querySelectorAll('.fc').forEach(card=>card.addEventListener('click',()=>openFood(card.dataset.fn,card.dataset.fg,card.dataset.fc==='1',card.dataset.fnotes)));}
+function openFood(name,group,isCustom,notes){
+  const fid='f_'+nm(name).replace(/[^a-z0-9]/g,'_').slice(0,30);
+  addR({id:fid,name,cat:group,type:'food'});renderRecs();
+  const fav=isF(fid);
+  const db=document.getElementById('det-body');
+  db.innerHTML='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">'+esc(group)+'</div>'
+    +'<div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:11px">'+esc(name)+'</div>'
+    +(notes?'<div style="background:var(--bg3);border-radius:11px;padding:12px;font-size:12px;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin-bottom:10px;border:1px solid var(--border)">'+esc(notes)+'</div>'
+           :'<div style="background:var(--bg3);border-radius:11px;padding:12px;font-size:11px;color:var(--text3);margin-bottom:10px;border:1px solid var(--border)">Suche oben oder frag Planty 🌱</div>')
+    +'<div style="display:flex;gap:7px">'
+    +'<button id="food-fav" style="flex:1;padding:11px;border-radius:12px;border:1px solid '+(fav?'var(--a)':'var(--border)')+';background:'+(fav?'var(--al)':'var(--bg3)')+';color:'+(fav?'var(--a)':'var(--text2)')+';font-size:13px;font-weight:700;cursor:pointer">'+(fav?'⭐ Favorit':'☆ Favorit')+'</button>'
+    +'<button id="food-planty" style="padding:11px 14px;border-radius:12px;border:1px solid var(--a);background:var(--al);color:var(--a);font-size:12px;font-weight:700;cursor:pointer">🌱 Rezept</button>'
+    +'</div>'
+    +(isCustom?'<button id="food-del" class="btn-del" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Löschen</button>':'');
+  document.getElementById('food-fav').addEventListener('click',function(){togF(fid,name,group);const f=isF(fid);this.textContent=f?'⭐ Favorit':'☆ Favorit';this.style.background=f?'var(--al)':'var(--bg3)';this.style.color=f?'var(--a)':'var(--text2)';this.style.borderColor=f?'var(--a)':'var(--border)';});
+  document.getElementById('food-planty').addEventListener('click',()=>{closeM('m-det');setTimeout(()=>{openPlanty();setTimeout(()=>{const ki=document.getElementById('ki-in');if(ki){ki.value='Veganes Rezept für: '+name;sendKI();}},300);},200);});
+  if(isCustom&&document.getElementById('food-del'))document.getElementById('food-del').addEventListener('click',()=>{if(!confirm('Löschen?'))return;sD(lD().filter(d=>d.n!==name));closeM('m-det');renderFoodList();});
+  openM('m-det');
+}
+
+// NOTES
+function renderNotes(){
+  const notes=lN();const filtered=NF?notes.filter(n=>n.cat===NF):notes;
+  const el=document.getElementById('notes-list');if(!el)return;
+  if(!filtered.length){el.innerHTML='<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="32" height="32" style="margin:0 auto 10px;display:block;opacity:.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="et">Keine Notizen</div><div class="es">Tippe + um eine neue Idee zu erfassen</div></div>';return;}
+  const PC={high:'#dc2626',mid:'#d97706',low:'#059669'};const PL={high:'🔴 Hoch',mid:'🟡 Mittel',low:'🟢 Niedrig'};
+  el.innerHTML=filtered.sort((a,b)=>b.ts-a.ts).map(n=>'<div class="nc" style="border-left:3px solid '+(PC[n.prio]||'var(--a)')+'"><div class="nc-in"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><span class="nc-badge" style="background:'+(PC[n.prio]||'var(--a)')+'20;color:'+(PC[n.prio]||'var(--a)')+'">'+n.cat+' · '+(PL[n.prio]||'Mittel')+'</span><div class="nc-ttl">'+esc(n.title)+'</div></div><button class="nc-del" data-ts="'+n.ts+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'+(n.src?'<div class="nc-src">📎 '+esc(n.src)+'</div>':'')+(n.body?'<div class="nc-body">'+esc(n.body)+'</div>':'')+'<div class="nc-ts">'+new Date(n.ts).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</div></div></div>').join('');
+  el.querySelectorAll('.nc-del').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Löschen?'))return;sN(lN().filter(n=>String(n.ts)!==b.dataset.ts));renderNotes();}));
+}
+function exportNotes(){
+  const notes=lN();if(!notes.length){alert('Keine Notizen vorhanden.');return;}
+  const u=gU();let txt='PLANTED — FEATURE-BERICHT\nNutzer: '+u.name+' · '+new Date().toLocaleDateString('de-DE')+'\n'+'═'.repeat(50)+'\n\n';
+  ['high','mid','low'].forEach(p=>{const g=notes.filter(n=>n.prio===p);if(!g.length)return;const L={high:'🔴 HOCH',mid:'🟡 MITTEL',low:'🟢 NIEDRIG'};txt+=L[p]+' ('+g.length+')\n'+'─'.repeat(40)+'\n';g.forEach((n,i)=>{txt+='\n'+(i+1)+'. '+n.title+'\n   Kategorie: '+n.cat+'\n';if(n.src)txt+='   Quelle: '+n.src+'\n';if(n.body)txt+='   Details: '+n.body.slice(0,200)+(n.body.length>200?'…':'')+'\n';txt+='   Datum: '+new Date(n.ts).toLocaleDateString('de-DE')+'\n';});txt+='\n';});
+  txt+='═'.repeat(50)+'\nFür: Claude AI → planted.html Update\n';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));a.download='planted-notizen-'+new Date().toISOString().split('T')[0]+'.txt';a.click();
+}
+
+// MODALS
+function openM(id){const m=document.getElementById(id);if(m)m.classList.add('on');}
+function closeM(id){const m=document.getElementById(id);if(m)m.classList.remove('on');}
+function openPlanty(){openM('m-planty');renderAPIPills();if(!kiH.length)addKM('asst','Hi! 🌱 Ich bin Planty — dein veganer Gesundheits-Assistent. Was möchtest du wissen?');}
+document.querySelectorAll('.mbg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('on');}));
+
+// BIND ALL
+function bindAll(){
+  // Recents del
+  document.getElementById('rec-del').addEventListener('click',()=>{sR([]);renderRecs();});
+  // Fav edit
+  document.getElementById('fav-edit').addEventListener('click',()=>goTab('health'));
+  // Cat back
+  document.getElementById('btn-catback').addEventListener('click',()=>goTab('health'));
+  // Theme
+  document.getElementById('btn-theme').addEventListener('click',toggleTheme);
+  // Profile nav
+  document.getElementById('btn-profile-nav').addEventListener('click',()=>goTab('profile'));
+  // Planty
+  document.getElementById('btn-planty').addEventListener('click',openPlanty);
+  document.getElementById('mc-planty').addEventListener('click',()=>closeM('m-planty'));
+  document.getElementById('ki-send').addEventListener('click',sendKI);
+  document.getElementById('ki-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendKI();});
+  // FAB
+  document.getElementById('afab').addEventListener('click',()=>{document.getElementById('dish-nm').value='';document.getElementById('dish-notes').value='';openM('m-dish');});
+  document.getElementById('mc-dish').addEventListener('click',()=>closeM('m-dish'));
+  document.getElementById('dish-save').addEventListener('click',()=>{
+    const n=document.getElementById('dish-nm').value.trim();if(!n){alert('Name fehlt.');return;}
+    sD([...lD(),{n,cat:document.getElementById('dish-cat').value,notes:document.getElementById('dish-notes').value.trim(),ts:Date.now()}]);
+    closeM('m-dish');if(CT==='food')renderFoodList();
+  });
+  // Detail modal
+  document.getElementById('mc-det').addEventListener('click',()=>closeM('m-det'));
+  // Notes
+  document.getElementById('btn-add-note').addEventListener('click',()=>{['note-ttl','note-src','note-body'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});openM('m-note');});
+  document.getElementById('mc-note').addEventListener('click',()=>closeM('m-note'));
+  document.getElementById('note-save').addEventListener('click',()=>{
+    const t=document.getElementById('note-ttl').value.trim();if(!t){alert('Titel fehlt.');return;}
+    sN([{ts:Date.now(),title:t,cat:document.getElementById('note-cat').value,src:document.getElementById('note-src').value.trim(),body:document.getElementById('note-body').value.trim(),prio:document.getElementById('note-prio').value,user:CU},...lN()]);
+    closeM('m-note');renderNotes();
+  });
+  document.getElementById('btn-export-notes').addEventListener('click',exportNotes);
+  // Note filter chips
+  document.querySelectorAll('#note-chips .chip').forEach(c=>c.addEventListener('click',()=>{NF=c.dataset.ncat;document.querySelectorAll('#note-chips .chip').forEach(x=>x.classList.toggle('on',x===c));renderNotes();}));
+  // Profile settings
+  document.getElementById('s-theme').addEventListener('click',toggleTheme);
+  document.getElementById('dm-pill').addEventListener('click',e=>{e.stopPropagation();toggleTheme();});
+  document.getElementById('s-export').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({v:'4.1',ts:new Date().toISOString(),dishes:lD(),favs:lF()},null,2)],{type:'application/json'}));a.download='planted-backup.json';a.click();});
+  document.getElementById('s-netlify').addEventListener('click',()=>openM('m-net'));
+  document.getElementById('mc-net').addEventListener('click',()=>closeM('m-net'));
+  document.getElementById('s-clear').addEventListener('click',()=>{if(confirm('Alle eigenen Gerichte löschen?'))sD([]);});
+  // Search
+  document.getElementById('q').addEventListener('input',e=>{const q=e.target.value;document.getElementById('si-x').classList.toggle('on',q.length>0);if(q.trim())doSearch(q);else goTab(CT==='search'?'home':CT);});
+  document.getElementById('si-x').addEventListener('click',()=>{document.getElementById('q').value='';document.getElementById('si-x').classList.remove('on');goTab(CT==='search'?'home':CT);});
+}
+
+// INIT
+loadAPI();
+bindAll();
+renderUsers();
+renderFavs();
+renderRecs();
+goTab('home');
+</script>
+</body></html>
