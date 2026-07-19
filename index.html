@@ -929,7 +929,14 @@ DB.entgiftung.push(
   {id:'e9',col:'#c2410c',lbl:'Darm',title:'Darm-Entgiftung — Colon Cleanse',tags:['darm','entgiftung','flohsamen','aktivkohle','darmreinigung','verstopfung'],src:{nm:'Zentrum der Gesundheit',url:'https://www.zentrum-der-gesundheit.de/'},body:`Darm = längste Entgiftungsroute des Körpers\n\n3-TAGES DARM-CLEANSE:\nTag 1: NUR Gemüsesäfte + 3L Wasser\nTag 2: Rohkost + Flohsamenschalen\nTag 3: Leicht gekochtes Gemüse\n\nWICHTIGSTE DARM-ENTGIFTER:\n• Aktivkohle: bindet Toxine · Gifte\n  (mind. 2h Abstand zu allem!)\n• Flohsamenschalen: Ballaststoff · Quellen\n  = Toxine mechanisch entfernen\n• Zeolith: Schwermetalle binden\n• Bentonit: ähnlich Zeolith\n\nMORGENROUTINE DARM:\n① Nüchtern: 1 Glas Wasser + Zitrone\n② 15 min später: 1 TL Flohsamenschalen in Wasser\n③ Probiotika (mindestens 30 min nach Schritt 2)\n\nDARM-FLORA AUFBAUEN NACH CLEANSE:\n4-8 Wochen hochdosierte Probiotika!`},
   {id:'e10',col:'#c2410c',lbl:'Lymphe',title:'Lymphsystem — Entgiftung aktivieren',tags:['lymphe','lymphsystem','trampolinspringen','massage','lymphknoten','entgiftung'],src:{nm:'Lymphologie',url:'https://pubmed.ncbi.nlm.nih.gov/'},body:`Lymphsystem = "innere Kanalisation"\n3× mehr Lymphflüssigkeit als Blut!\nKEINE eigene Pumpe → braucht Bewegung!\n\nLYMPHE AKTIVIEREN:\n• Trampolinspringen (Rebounding):\n  = effektivste Lymph-Übung!\n  10-20 min täglich → Lymphfluss ×15!\n• Tiefes Atmen: Zwerchfell pumpt Lymphe\n• Kalte Dusche: Gefäße kontrahieren → Lymphe pumpen\n• Trockenbürsten: von Extremitäten zum Herz\n\nTROCKENBÜRSTEN:\n① Immer zum Herz hin bürsten\n② Beine: Füße → Hüfte\n③ Arme: Hände → Achsel\n④ Bauch: kreisförmig im Uhrzeigersinn\n⑤ VOR der Dusche · trockene Haut\n→ Lymphfluss ↑ · Cellulite ↓ · Hautbild ↑`}
 );
-Object.keys(DB).forEach(k=>{DB[k].sort((a,b)=>(a.lbl||a.title||'').localeCompare((b.lbl||b.title||''),'de',{sensitivity:'base'}));});
+// Alphabetisch sortieren — alle DB Kategorien
+Object.keys(DB).forEach(k => {
+  DB[k].sort((a, b) => {
+    const ta = (a.title || '').toLowerCase();
+    const tb = (b.title || '').toLowerCase();
+    return ta.localeCompare(tb, 'de');
+  });
+});
 const ALL=Object.values(DB).flat();
 console.log('DB Einträge total:',ALL.length);Object.entries(DB).forEach(([k,v])=>console.log(k+':',v.length));
 
@@ -1054,7 +1061,15 @@ const FG=[
     {n:'Harissa',e:'🌶️',time:15,zutaten:['Rote Chilis','Knoblauch','Kreuzkümmel','Koriander','Olivenöl','Zitrone','Salz'],links:[{nm:'Chefkoch',url:'https://www.chefkoch.de/suche.php?suche=harissa+selbst+machen'},{nm:'Minimalist Baker',url:'https://minimalistbaker.com/?s=harissa'}]},
   ]},
 ];
-FG.forEach(g=>{g.items.sort((a,b)=>(a.n||'').localeCompare((b.n||''),'de',{sensitivity:'base'}));});
+// Gerichte (FG) alphabetisch
+FG.sort((a, b) => a.g.localeCompare(b.g, 'de'));
+FG.forEach(g => {
+  g.items.sort((a, b) => {
+    const na = typeof a === 'string' ? a : a.n;
+    const nb = typeof b === 'string' ? b : b.n;
+    return na.localeCompare(nb, 'de');
+  });
+});
 
 // MULTI-API KI
 const APIS=[
