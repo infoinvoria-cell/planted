@@ -67,6 +67,34 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .nfab:active{transform:scale(.92);transition:transform .1s}
 #view{scroll-behavior:smooth}
 
+/* Widget Row */
+.widget-row{display:flex;gap:10px;padding:12px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.widget-row::-webkit-scrollbar{display:none}
+.widget{flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:13px 13px 11px;cursor:default;position:relative;transition:transform .15s}
+.widget:active{transform:scale(.97)}
+.widget-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:8px}
+.widget-main{display:flex;align-items:baseline;gap:3px;margin-bottom:5px}
+.widget-value{font-size:32px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
+.widget-unit{font-size:13px;font-weight:700;color:var(--text3)}
+.widget-sub{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;line-height:1.3}
+.widget-bar-wrap{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.widget-bar{height:100%;border-radius:99px;background:var(--a);width:30%;transition:width .8s ease,background .5s}
+.widget-foot{font-size:9px;color:var(--text3);font-weight:600}
+.sr-calm .widget-bar{background:#22c55e}.sr-calm .widget-value{color:#16a34a}
+.sr-elevated .widget-bar{background:#f59e0b}.sr-elevated .widget-value{color:#d97706}
+.sr-high .widget-bar{background:#ef4444}.sr-high .widget-value{color:#dc2626}
+.widget-time{background:linear-gradient(135deg,var(--a),var(--ad))}
+.widget-time .widget-label,.widget-time .widget-value,.widget-time .widget-sub,.widget-time .widget-foot{color:rgba(255,255,255,.9)}
+.widget-add{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-style:dashed;color:var(--text3);min-height:120px}
+.widget-add .widget-label,.widget-add .widget-sub{color:var(--text3)}
+/* Home Kategorien */
+.home-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px}
+.home-cat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;border-left:3px solid var(--cc,var(--a));transition:all .12s;display:flex;align-items:center;gap:9px}
+.home-cat-card:active{background:var(--bg3);transform:scale(.97)}
+.home-cat-emoji{font-size:22px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.home-cat-nm{font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.2px}
+.home-cat-sub{font-size:9.5px;color:var(--text3);margin-top:1px;line-height:1.3}
+
 .topbar{padding:14px 16px 10px;background:var(--bg2);border-bottom:1px solid var(--border)}
 .tb1{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .tb-logo{display:flex;align-items:center;gap:8px}
@@ -299,32 +327,55 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
 <div id="view">
 <!-- HOME -->
 <div class="screen on" id="s-home">
+
+  <!-- WIDGET REIHE -->
+  <div class="widget-row" id="widget-row">
+
+    <!-- SCHUMANN WIDGET -->
+    <div class="widget" id="widget-schumann">
+      <div class="widget-label">🌍 Schumann Resonanz</div>
+      <div class="widget-main">
+        <span class="widget-value" id="sr-hz">7.83</span>
+        <span class="widget-unit">Hz</span>
+      </div>
+      <div class="widget-sub" id="sr-status">Lädt…</div>
+      <div class="widget-bar-wrap">
+        <div class="widget-bar" id="sr-bar"></div>
+      </div>
+      <div class="widget-foot" id="sr-kp">Kp: –</div>
+    </div>
+
+    <!-- UHRZEIT WIDGET -->
+    <div class="widget widget-time">
+      <div class="widget-label">🕐 Jetzt</div>
+      <div class="widget-main">
+        <span class="widget-value" id="w-time" style="font-size:26px"></span>
+      </div>
+      <div class="widget-sub" id="w-date"></div>
+      <div class="widget-foot" id="w-utc"></div>
+    </div>
+
+    <!-- PLACEHOLDER -->
+    <div class="widget widget-add" id="widget-add-btn">
+      <div style="font-size:24px;margin-bottom:6px">＋</div>
+      <div class="widget-label">Widget</div>
+      <div class="widget-sub">hinzufügen</div>
+    </div>
+
+  </div>
+
+  <!-- FAVORITEN -->
   <div class="sl" id="fav-sl" style="display:none"><span class="sl-t">⭐ Meine Favoriten</span><span class="sl-a" id="fav-edit">Alle</span></div>
   <div class="fav-strip" id="fav-strip"></div>
+
+  <!-- ZULETZT ANGESEHEN -->
   <div class="sl"><span class="sl-t">🕐 Zuletzt angesehen</span><span class="sl-a" id="rec-del">Löschen</span></div>
   <div class="rec-scroll" id="rec-list"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px">
-    <div onclick="goTab('health')" style="background:var(--card);border:1px solid var(--border);border-left:4px solid #1a7c35;border-radius:16px;padding:16px 14px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column">
-      <div style="font-size:26px;margin-bottom:8px">🌿</div>
-      <div style="font-size:15px;font-weight:800;margin-bottom:3px;color:var(--text)">Gesundheit</div>
-      <div style="font-size:10px;color:var(--text3);line-height:1.4">Naturheilkunde · Praxis · Frequenzen</div>
-    </div>
-    <div onclick="goTab('food')" style="background:var(--card);border:1px solid var(--border);border-left:4px solid #c2410c;border-radius:16px;padding:16px 14px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column">
-      <div style="font-size:26px;margin-bottom:8px">🍽️</div>
-      <div style="font-size:15px;font-weight:800;margin-bottom:3px;color:var(--text)">Gerichte</div>
-      <div style="font-size:10px;color:var(--text3);line-height:1.4">Vegane Küche · Rezepte · Zutaten</div>
-    </div>
-    <div onclick="goTab('plants')" style="background:var(--card);border:1px solid var(--border);border-left:4px solid #15803d;border-radius:16px;padding:16px 14px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column">
-      <div style="font-size:26px;margin-bottom:8px">🌸</div>
-      <div style="font-size:15px;font-weight:800;margin-bottom:3px;color:var(--text)">Heilpflanzen</div>
-      <div style="font-size:10px;color:var(--text3);line-height:1.4">Kräuter · Tinkturen · Pflanzen</div>
-    </div>
-    <div onclick="goTab('spirit')" style="background:var(--card);border:1px solid var(--border);border-left:4px solid #92400e;border-radius:16px;padding:16px 14px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column">
-      <div style="font-size:26px;margin-bottom:8px">🦅</div>
-      <div style="font-size:15px;font-weight:800;margin-bottom:3px;color:var(--text)">Krafttiere</div>
-      <div style="font-size:10px;color:var(--text3);line-height:1.4">Schamanisch · Bedeutung · Botschaft</div>
-    </div>
-  </div>
+
+  <!-- KATEGORIEN KACHELN -->
+  <div class="sl"><span class="sl-t">Kategorien</span></div>
+  <div class="home-cats" id="home-cats"></div>
+
 </div>
 
 <!-- HEALTH -->
@@ -1159,7 +1210,7 @@ function goTab(id){
   });
   const af=document.getElementById('afab');if(af)af.classList.toggle('on',id==='food');
   CT=id;
-  if(id==='home'){renderFavs();renderRecs();}
+  if(id==='home'){renderFavs();renderRecs();renderHomeCats();}
   if(id==='health')renderCatGrid();
   if(id==='food')renderFood();
   if(id==='plants')renderPlants();
@@ -1671,12 +1722,86 @@ function initModalDrag(modalId){
   const el=document.getElementById(id);if(el)initModalDrag(id);
 });
 
+// ── SCHUMANN / KP WIDGET ─────────────────────
+async function loadSchumannWidget(){
+  const widget=document.getElementById('widget-schumann');
+  const valEl=document.getElementById('sr-hz');
+  const statEl=document.getElementById('sr-status');
+  const barEl=document.getElementById('sr-bar');
+  const kpEl=document.getElementById('sr-kp');
+  if(!widget)return;
+  try{
+    const res=await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json',{cache:'no-store'});
+    const data=await res.json();
+    const latest=data[data.length-1];
+    const kp=parseFloat(latest[1]);
+    const hz=(7.83+kp*0.4).toFixed(2);
+    let status,statusClass,barWidth;
+    if(kp<=2){status='🟢 Ruhig & erdend';statusClass='sr-calm';barWidth=20+kp*8;}
+    else if(kp<=4){status='🟡 Leicht erhöht';statusClass='sr-elevated';barWidth=40+kp*8;}
+    else if(kp<=6){status='🟠 Erhöht — achtsam';statusClass='sr-elevated';barWidth=60+kp*5;}
+    else{status='🔴 Stark erhöht';statusClass='sr-high';barWidth=85+kp;}
+    barWidth=Math.min(barWidth,100);
+    valEl.textContent=hz;
+    statEl.textContent=status;
+    barEl.style.width=barWidth+'%';
+    kpEl.textContent='Kp: '+kp+' · '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr';
+    widget.classList.remove('sr-calm','sr-elevated','sr-high');
+    widget.classList.add(statusClass);
+    widget.style.cursor='pointer';
+    widget.onclick=()=>{const e=ALL.find(x=>x.tags&&x.tags.includes('schumann'));if(e)openHealth(e);};
+  }catch(err){
+    statEl.textContent='7.83 Hz · Basis';
+    valEl.textContent='7.83';
+    barEl.style.width='25%';
+    kpEl.textContent='Daten offline';
+  }
+}
+
+function startClock(){
+  function tick(){
+    const now=new Date();
+    const t=document.getElementById('w-time');
+    const d=document.getElementById('w-date');
+    const u=document.getElementById('w-utc');
+    if(t)t.textContent=now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    if(d)d.textContent=now.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'short'});
+    if(u)u.textContent='UTC '+new Date().toLocaleTimeString('en-GB',{timeZone:'UTC',hour:'2-digit',minute:'2-digit'});
+  }
+  tick();
+  setInterval(tick,1000);
+}
+
+function renderHomeCats(){
+  const el=document.getElementById('home-cats');
+  if(!el)return;
+  const cats=[
+    {id:'health',nm:'Gesundheit',sub:'Naturheilkunde · Frequenzen',emoji:'🌿',col:'#1a7c35'},
+    {id:'food',nm:'Gerichte',sub:'Vegane Küche · Rezepte',emoji:'🍽️',col:'#c2410c'},
+    {id:'notes',nm:'Notizen',sub:'Ideen · Partner-Infos',emoji:'📝',col:'#7c3aed'},
+    {id:'profile',nm:'Profil & KI',sub:'Nutzer · Planty · APIs',emoji:'⚙️',col:'#2563eb'},
+  ];
+  el.innerHTML=cats.map(c=>
+    '<div class="home-cat-card" style="--cc:'+c.col+'" data-tabid="'+c.id+'">'+
+    '<div class="home-cat-emoji" style="background:'+c.col+'18">'+c.emoji+'</div>'+
+    '<div><div class="home-cat-nm">'+c.nm+'</div>'+
+    '<div class="home-cat-sub">'+c.sub+'</div></div></div>'
+  ).join('');
+  el.querySelectorAll('[data-tabid]').forEach(card=>
+    card.addEventListener('click',()=>goTab(card.dataset.tabid))
+  );
+}
+
 // INIT
 loadAPI();
 bindAll();
 renderUsers();
 renderFavs();
 renderRecs();
+renderHomeCats();
+loadSchumannWidget();
+setInterval(loadSchumannWidget,5*60*1000);
+startClock();
 goTab('home');
 </script>
 </body></html>
