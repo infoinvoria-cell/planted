@@ -499,20 +499,20 @@ try{sb=supabase.createClient('https://cuysjgfgdcyfednajnuk.supabase.co','eyJhbGc
 
 // HEALTH DB
 const CATS=[
-  {id:'praxis',nm:'Praxisfälle',col:'#dc2626',p:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'},
-  {id:'frequenzen',nm:'Frequenzen',col:'#7c3aed',p:'M2 12h2l3-8 4 16 3-12 2 4h6'},
-  {id:'naehrstoffe',nm:'Nährstoffe',col:'#059669',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18'},
-  {id:'naturheilkunde',nm:'Naturheilkunde',col:'#1a7c35',p:'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10zM2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'},
-  {id:'entgiftung',nm:'Entgiftung',col:'#c2410c',p:'M3 6l9 6 9-6M3 12l9 6 9-6M12 2v2M12 20v2'},
-  {id:'kupfer',nm:'Kupfer & Wasser',col:'#d97706',p:'M12 2a10 10 0 1 0 10 10M12 8v4l3 3'},
-  {id:'zahnpflege',nm:'Zahnpflege',col:'#2563eb',p:'M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z'},
-  {id:'hormone',nm:'Hormone & Zyklus',col:'#be185d',p:'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4l3 3'},
-  {id:'energetisch',nm:'Energetisch & HRV',col:'#ca8a04',p:'M13 2 3 14h9l-1 8 10-12h-9l1-8z'},
-  {id:'natron',nm:'Natron & Hausmittel',col:'#4d7c0f',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18'},
-  {id:'aloe',nm:'Aloe Vera',col:'#10b981',p:'M7 20h10M10 20c5.5-2.5.8-6.4 3-10M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z'},
-  {id:'laborwerte',nm:'Laborwerte',col:'#6d28d9',p:'M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2M8.5 2h7'},
-  {id:'krafttiere',nm:'Krafttiere',col:'#92400e',p:'M12 2a10 10 0 1 0 10 10M12 8v4l3 3'},
-  {id:'heilpflanzen',nm:'Heilpflanzen',col:'#15803d',p:'M12 2a10 10 0 0 1 0 20M12 2a10 10 0 0 0 0 20M12 2v20M2 12h20'},
+  {id:'praxis',nm:'Praxisfälle',col:'#dc2626',emoji:'🩺',p:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'},
+  {id:'frequenzen',nm:'Frequenzen',col:'#7c3aed',emoji:'〰️',p:'M2 12h2l3-8 4 16 3-12 2 4h6'},
+  {id:'naehrstoffe',nm:'Nährstoffe',col:'#059669',emoji:'💊',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18'},
+  {id:'naturheilkunde',nm:'Naturheilkunde',col:'#1a7c35',emoji:'🌿',p:'M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10zM2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'},
+  {id:'entgiftung',nm:'Entgiftung',col:'#c2410c',emoji:'🧹',p:'M3 6l9 6 9-6M3 12l9 6 9-6M12 2v2M12 20v2'},
+  {id:'kupfer',nm:'Kupfer & Wasser',col:'#d97706',emoji:'🫗',p:'M12 2a10 10 0 1 0 10 10M12 8v4l3 3'},
+  {id:'zahnpflege',nm:'Zahnpflege',col:'#2563eb',emoji:'🦷',p:'M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z'},
+  {id:'hormone',nm:'Hormone & Zyklus',col:'#be185d',emoji:'🌸',p:'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4l3 3'},
+  {id:'energetisch',nm:'Energetisch & HRV',col:'#ca8a04',emoji:'⚡',p:'M13 2 3 14h9l-1 8 10-12h-9l1-8z'},
+  {id:'natron',nm:'Natron & Hausmittel',col:'#4d7c0f',emoji:'🧂',p:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18'},
+  {id:'aloe',nm:'Aloe Vera',col:'#10b981',emoji:'🪴',p:'M7 20h10M10 20c5.5-2.5.8-6.4 3-10M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z'},
+  {id:'laborwerte',nm:'Laborwerte',col:'#6d28d9',emoji:'🔬',p:'M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2M8.5 2h7'},
+  {id:'krafttiere',nm:'Krafttiere',col:'#92400e',emoji:'🦅',p:'M12 2a10 10 0 1 0 10 10M12 8v4l3 3'},
+  {id:'heilpflanzen',nm:'Heilpflanzen',col:'#15803d',emoji:'🌺',p:'M12 2a10 10 0 0 1 0 20M12 2a10 10 0 0 0 0 20M12 2v20M2 12h20'},
 ];
 const DB={};
 DB.praxis=[
@@ -1012,7 +1012,7 @@ function renderRecs(){
 const SVGIC=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="'+p+'"/></svg>';
 function renderCatGrid(){
   const el=document.getElementById('cat-grid');if(!el)return;
-  el.innerHTML=CATS.map(c=>'<div class="cat-card" style="--cc:'+c.col+'" data-cid="'+c.id+'">'+'<div class="cat-ic" style="background:'+c.col+';color:#fff">'+SVGIC(c.p)+'</div>'+'<div><div class="cat-nm">'+c.nm+'</div><div class="cat-sub">'+((DB[c.id]||[]).length)+' Einträge</div></div></div>').join('');
+  el.innerHTML=CATS.map(c=>'<div class="cat-card" style="--cc:'+c.col+'" data-cid="'+c.id+'">'+'<div class="cat-ic" style="background:'+c.col+';color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center">'+c.emoji+'</div>'+'<div><div class="cat-nm">'+c.nm+'</div><div class="cat-sub">'+((DB[c.id]||[]).length)+' Einträge</div></div></div>').join('');
   el.querySelectorAll('[data-cid]').forEach(c=>c.addEventListener('click',()=>openCat(c.dataset.cid)));
 }
 function openCat(id){
