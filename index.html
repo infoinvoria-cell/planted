@@ -345,6 +345,26 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
 
 
 
+    <!-- LUFTQUALITÄT WIDGET -->
+    <div class="widget" id="widget-luft" style="width:150px">
+      <div class="widget-label">🌫️ Luftqualität</div>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-bottom:2px">
+        <span class="widget-value" id="lq-aqi" style="font-size:22px">–</span>
+        <span class="widget-unit">AQI</span>
+      </div>
+      <div class="widget-sub" id="lq-status" style="margin-bottom:4px">Ahaus lädt…</div>
+      <div class="widget-bar-wrap" style="margin-bottom:8px">
+        <div class="widget-bar" id="lq-bar"></div>
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:7px"></div>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-bottom:2px">
+        <span style="font-size:16px;font-weight:800;color:var(--text)" id="lq-de-aqi">–</span>
+        <span style="font-size:10px;color:var(--text3)">AQI DE</span>
+      </div>
+      <div style="font-size:9px;color:var(--text3)" id="lq-de-status">Deutschland lädt…</div>
+      <div class="widget-foot" style="margin-top:6px" id="lq-detail">PM2.5 · PM10 · LANUV</div>
+    </div>
+
     <!-- PLACEHOLDER -->
     <div class="widget-add-mini" id="widget-add-btn" title="Widget hinzufügen">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -1781,6 +1801,57 @@ renderRecs();
 renderHomeCats();
 loadSchumannWidget();
 setInterval(loadSchumannWidget,5*60*1000);
+
+const WAQI_TOKEN='b4996e6670f22eafddbd90be655f4c5fea7ee133';
+function aqiStatus(aqi){
+  if(aqi<=50) return{s:'🟢 Sehr gut', c:'#22c55e',bw:aqi*2};
+  if(aqi<=100)return{s:'🟡 Mäßig',   c:'#f59e0b',bw:aqi};
+  if(aqi<=150)return{s:'🟠 Ungesund*',c:'#f97316',bw:80};
+  if(aqi<=200)return{s:'🔴 Ungesund', c:'#ef4444',bw:90};
+  return          {s:'🟣 Kritisch', c:'#7c3aed',bw:100};
+}
+async function loadLuftWidget(){
+  const v=document.getElementById('lq-aqi');
+  const st=document.getElementById('lq-status');
+  const bar=document.getElementById('lq-bar');
+  const det=document.getElementById('lq-detail');
+  const deV=document.getElementById('lq-de-aqi');
+  const deSt=document.getElementById('lq-de-status');
+  if(!v)return;
+  try{
+    const r=await fetch('https://api.waqi.info/feed/geo:52.0741;7.0096/?token='+WAQI_TOKEN);
+    const d=await r.json();
+    if(d.status==='ok'){
+      const aqi=d.data.aqi;
+      const pm25=d.data.iaqi?.pm25?.v??'–';
+      const pm10=d.data.iaqi?.pm10?.v??'–';
+      const{s,c,bw}=aqiStatus(aqi);
+      v.textContent=aqi;st.textContent=s+' · Ahaus';
+      bar.style.width=Math.min(bw,100)+'%';bar.style.background=c;
+      det.textContent='PM2.5: '+pm25+' µg · PM10: '+pm10+' µg';
+    }
+  }catch(e){v.textContent='?';st.textContent='Ahaus offline';}
+  try{
+    const r2=await fetch('https://api.waqi.info/feed/germany/?token='+WAQI_TOKEN);
+    const d2=await r2.json();
+    if(d2.status==='ok'){
+      const aqi2=d2.data.aqi;const{s:s2,c:c2}=aqiStatus(aqi2);
+      deV.textContent=aqi2;deV.style.color=c2;deSt.textContent=s2+' · DE Ø';
+    }else{
+      const r3=await fetch('https://api.waqi.info/feed/geo:51.1657;10.4515/?token='+WAQI_TOKEN);
+      const d3=await r3.json();
+      if(d3.status==='ok'){
+        const aqi3=d3.data.aqi;const{s:s3,c:c3}=aqiStatus(aqi3);
+        deV.textContent=aqi3;deV.style.color=c3;deSt.textContent=s3+' · DE Mitte';
+      }
+    }
+  }catch(e){deV.textContent='?';deSt.textContent='Deutschland offline';}
+  const w=document.getElementById('widget-luft');
+  if(w){w.style.cursor='pointer';w.onclick=()=>{const entry=ALL.find(x=>x.tags?.includes('entgiftung')||x.id==='e1');if(entry)openHealth(entry);};}
+}
+loadLuftWidget();
+setInterval(loadLuftWidget,10*60*1000);
+
 goTab('home');
 </script>
 </body></html>
