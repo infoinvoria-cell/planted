@@ -68,10 +68,9 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 #view{scroll-behavior:smooth}
 
 /* Widget Row */
-.widget-row{display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;align-items:center}
-.widget-row::-webkit-scrollbar{display:none}
-.widget{flex-shrink:0;width:120px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:11px 11px 9px;cursor:default;position:relative;transition:transform .15s;min-height:110px}
-.widget:active{transform:scale(.97)}
+.widget-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px 4px}
+.widget{width:100%;min-width:0;border-radius:16px;padding:11px 10px 9px;background:var(--card);border:1px solid var(--border);min-height:115px;cursor:pointer;transition:transform .15s}
+.widget:active{transform:scale(.96)}
 .widget-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:6px}
 .widget-main{display:flex;align-items:baseline;gap:3px;margin-bottom:5px}
 .widget-value{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1}
@@ -83,8 +82,6 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .sr-calm .widget-bar{background:#22c55e}.sr-calm .widget-value{color:#16a34a}
 .sr-elevated .widget-bar{background:#f59e0b}.sr-elevated .widget-value{color:#d97706}
 .sr-high .widget-bar{background:#ef4444}.sr-high .widget-value{color:#dc2626}
-.widget-add-mini{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;align-self:center;transition:all .15s;background:var(--bg3)}
-.widget-add-mini:active{border-color:var(--a);color:var(--a);transform:scale(.92)}
 /* Home Kategorien */
 .home-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px}
 .home-cat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;border-left:3px solid var(--cc,var(--a));transition:all .12s;display:flex;align-items:center;gap:9px}
@@ -365,11 +362,21 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
       <div class="widget-foot" style="margin-top:6px" id="lq-detail">PM2.5 · PM10 · LANUV</div>
     </div>
 
-    <!-- PLACEHOLDER -->
-    <div class="widget-add-mini" id="widget-add-btn" title="Widget hinzufügen">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
+    <!-- FREQUENZ WIDGET -->
+    <div class="widget" id="widget-freq">
+      <div class="widget-label">〰️ Frequenz</div>
+      <div class="widget-main">
+        <span class="widget-value" id="fq-hz" style="font-size:22px">7.83</span>
+        <span class="widget-unit">Hz</span>
+      </div>
+      <div class="widget-sub" id="fq-name">Schumann</div>
+      <div class="widget-bar-wrap">
+        <div class="widget-bar" id="fq-bar" style="background:var(--purple);width:30%;transition:width .3s ease"></div>
+      </div>
+      <div class="widget-foot" style="display:flex;align-items:center;justify-content:space-between">
+        <span id="fq-status">▶ Tippen</span>
+        <span id="fq-time">0:00</span>
+      </div>
     </div>
 
   </div>
@@ -577,6 +584,41 @@ mark{background:#d1fae5;color:#166534;border-radius:3px;padding:0 2px}
   <div class="modal-t">🚀 Online stellen</div>
   <div style="background:var(--bg3);border-radius:12px;padding:14px;font-size:12px;color:var(--text2);line-height:1.9;border:1px solid var(--border)"><strong style="color:var(--text)">Netlify (kostenlos):</strong><br>1. netlify.com → registrieren<br>2. "Add new site" → "Deploy manually"<br>3. Diese HTML-Datei reinziehen<br>4. URL: <strong style="color:var(--a)">planted-xyz.netlify.app</strong></div>
 </div></div>
+
+<div class="mbg" id="m-freq-player">
+  <div class="modal" style="max-height:92vh">
+    <div class="mh"></div>
+    <button class="mcl" id="mc-freq-player">Schließen</button>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Frequenz Player</div>
+      <div style="font-size:32px;font-weight:900;color:var(--purple);letter-spacing:-1px" id="fp-hz-display">7.83 Hz</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text2);margin-top:2px" id="fp-name-display">Schumann Resonanz</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px" id="fp-desc">Erdfrequenz · Erdung · HRV</div>
+    </div>
+    <div style="height:48px;display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:16px;background:var(--bg3);border-radius:12px;padding:8px 12px" id="fp-visualizer"></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:18px">
+      <button id="fp-prev" style="width:40px;height:40px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button id="fp-play" style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#5b21b6);border:none;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(124,58,237,.4)">
+        <svg id="fp-play-icon" width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <button id="fp-next" style="width:40px;height:40px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px;padding:0 2px">
+      <span id="fp-elapsed">0:00</span><span id="fp-duration">∞</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+      <input type="range" id="fp-vol" min="0" max="100" value="70" style="flex:1;accent-color:var(--purple);height:3px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Frequenzen</div>
+    <div id="fp-list" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto"></div>
+  </div>
+</div>
 
 </div></div>
 
@@ -1728,7 +1770,7 @@ function initModalDrag(modalId){
   mh.addEventListener('touchend',e=>{onEnd(e.changedTouches[0].clientY);});
   mh.style.cursor='ns-resize';
 }
-['m-planty','m-det','m-add-custom','m-dish','m-note','m-net'].forEach(id=>{
+['m-planty','m-det','m-add-custom','m-dish','m-note','m-net','m-freq-player'].forEach(id=>{
   const el=document.getElementById(id);if(el)initModalDrag(id);
 });
 
@@ -1851,6 +1893,78 @@ async function loadLuftWidget(){
 }
 loadLuftWidget();
 setInterval(loadLuftWidget,10*60*1000);
+
+// ── FREQUENZ PLAYER ──────────────────────────────
+const FREQS=[
+  {hz:7.83, name:'Schumann',   desc:'Erdfrequenz · Erdung · HRV',              col:'#22c55e'},
+  {hz:3,    name:'Delta',      desc:'Schlaf · Tiefenentspannung',               col:'#2563eb'},
+  {hz:432,  name:'432 Hz',     desc:'Beruhigung · Angst lösen',                 col:'#7c3aed'},
+  {hz:528,  name:'528 Hz',     desc:'DNA-Reparatur · Wohlbefinden',             col:'#d97706'},
+  {hz:417,  name:'417 Hz',     desc:'Energie · Blockaden lösen',                col:'#dc2626'},
+  {hz:396,  name:'396 Hz',     desc:'Angst & Schuld loslassen',                 col:'#be185d'},
+  {hz:639,  name:'639 Hz',     desc:'Beziehungen · Verbindung',                 col:'#0891b2'},
+  {hz:741,  name:'741 Hz',     desc:'Bewusstsein · Intuition',                  col:'#ca8a04'},
+  {hz:852,  name:'852 Hz',     desc:'Höhere Intuition · Klarheit',              col:'#059669'},
+  {hz:963,  name:'963 Hz',     desc:'Kronenchakra · Spiritualität',             col:'#6d28d9'},
+  {hz:40,   name:'Gamma 40Hz', desc:'Fokus · Konzentration · Alzheimer-Präv.', col:'#0e7490'},
+  {hz:10,   name:'Alpha 10Hz', desc:'Entspannung · Kreativität',                col:'#16a34a'},
+  {hz:280,  name:'280 Hz',     desc:'Metabolismus · Gewicht',                   col:'#c2410c'},
+];
+let audioCtx=null,freqOsc=null,freqGain=null,freqPlaying=false,freqIdx=0,freqTimer=null,freqSecs=0,vizBars=[];
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function buildVisualizer(){const el=document.getElementById('fp-visualizer');if(!el)return;el.innerHTML='';vizBars=[];for(let i=0;i<20;i++){const b=document.createElement('div');b.style.cssText='width:4px;border-radius:99px;background:var(--purple);height:6px;transition:height .1s ease';el.appendChild(b);vizBars.push(b);}}
+function animateViz(playing){if(!playing){vizBars.forEach(b=>b.style.height='6px');return;}vizBars.forEach((b,i)=>{b.style.height=(6+Math.abs(Math.sin(Date.now()/200+i*0.5))*28)+'px';});if(freqPlaying)requestAnimationFrame(()=>animateViz(true));}
+function startFreq(idx){
+  stopFreq();freqIdx=idx;const f=FREQS[idx];
+  const ctx=getAudioCtx();freqOsc=ctx.createOscillator();freqGain=ctx.createGain();
+  if(f.hz<20){
+    const osc2=ctx.createOscillator(),g2=ctx.createGain();
+    freqOsc.frequency.value=200;osc2.frequency.value=200+f.hz;
+    freqGain.gain.value=0.35;g2.gain.value=0.35;
+    freqOsc.connect(freqGain);osc2.connect(g2);freqGain.connect(ctx.destination);g2.connect(ctx.destination);
+    osc2.start();freqOsc._osc2=osc2;freqOsc._g2=g2;
+  }else{
+    freqOsc.frequency.value=f.hz;freqOsc.type='sine';freqGain.gain.value=0.35;
+    freqOsc.connect(freqGain);freqGain.connect(ctx.destination);
+  }
+  freqGain.gain.setValueAtTime(0,ctx.currentTime);freqGain.gain.linearRampToValueAtTime(0.35,ctx.currentTime+0.5);
+  freqOsc.start();freqPlaying=true;freqSecs=0;
+  updateFreqUI(f);
+  freqTimer=setInterval(()=>{freqSecs++;const m=Math.floor(freqSecs/60),s=freqSecs%60,ts=m+':'+(s<10?'0':'')+s;const el=document.getElementById('fp-elapsed');if(el)el.textContent=ts;const tw=document.getElementById('fq-time');if(tw)tw.textContent=ts;},1000);
+  const icon=document.getElementById('fp-play-icon');if(icon)icon.innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  const vol=document.getElementById('fp-vol');if(vol&&freqGain)freqGain.gain.value=vol.value/100*0.7;
+  animateViz(true);
+}
+function stopFreq(){
+  if(freqOsc){try{if(freqOsc._osc2){freqOsc._osc2.stop();freqOsc._osc2.disconnect();}if(freqOsc._g2)freqOsc._g2.disconnect();freqOsc.stop();freqOsc.disconnect();}catch(e){}freqOsc=null;}
+  if(freqGain){try{freqGain.disconnect();}catch(e){}freqGain=null;}
+  if(freqTimer){clearInterval(freqTimer);freqTimer=null;}
+  freqPlaying=false;
+  const icon=document.getElementById('fp-play-icon');if(icon)icon.innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';
+  const st=document.getElementById('fq-status');if(st)st.textContent='▶ Tippen';
+  animateViz(false);
+}
+function updateFreqUI(f){
+  const map={'fp-hz-display':f.hz+' Hz','fp-name-display':f.name,'fp-desc':f.desc,'fq-hz':f.hz,'fq-name':f.name,'fq-status':'▶ '+f.name};
+  Object.entries(map).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+  const bar=document.getElementById('fq-bar');if(bar){bar.style.background=f.col;bar.style.width='60%';}
+  document.querySelectorAll('#fp-list .fp-item').forEach((item,i)=>{item.style.background=i===freqIdx?f.col+'20':'';item.style.borderColor=i===freqIdx?f.col:'var(--border)';});
+}
+function buildFreqList(){
+  const el=document.getElementById('fp-list');if(!el)return;
+  el.innerHTML=FREQS.map((f,i)=>'<div class="fp-item" style="display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;border:1px solid var(--border);cursor:pointer;transition:all .12s;background:var(--bg3)" data-fi="'+i+'"><div style="width:8px;height:8px;border-radius:50%;background:'+f.col+';flex-shrink:0"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text)">'+f.name+'</div><div style="font-size:9.5px;color:var(--text3)">'+f.hz+' Hz · '+f.desc+'</div></div><div style="font-size:11px;font-weight:700;color:'+f.col+'">▶</div></div>').join('');
+  el.querySelectorAll('.fp-item').forEach(item=>item.addEventListener('click',()=>startFreq(parseInt(item.dataset.fi))));
+}
+function bindFreqPlayer(){
+  const widget=document.getElementById('widget-freq');
+  if(widget)widget.addEventListener('click',()=>{buildFreqList();buildVisualizer();openM('m-freq-player');if(!freqPlaying)startFreq(freqIdx);});
+  document.getElementById('mc-freq-player')?.addEventListener('click',()=>{closeM('m-freq-player');const st=document.getElementById('fq-status');if(st&&freqPlaying)st.textContent='♫ Läuft';});
+  document.getElementById('fp-play')?.addEventListener('click',()=>{if(freqPlaying)stopFreq();else startFreq(freqIdx);});
+  document.getElementById('fp-prev')?.addEventListener('click',()=>startFreq((freqIdx-1+FREQS.length)%FREQS.length));
+  document.getElementById('fp-next')?.addEventListener('click',()=>startFreq((freqIdx+1)%FREQS.length));
+  document.getElementById('fp-vol')?.addEventListener('input',function(){if(freqGain)freqGain.gain.value=this.value/100*0.7;});
+}
+bindFreqPlayer();
 
 goTab('home');
 </script>
